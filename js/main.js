@@ -17,10 +17,10 @@ function runCalculator() {
   }
 
   // Calculate how many documents fit
-  const maxDocs = calculateMaxDocuments(pageLength, docLength);
+  const maxDocs = calculateMaxDocuments(pageLength, docLength, CONFIG.gutterSize);
 
   // Get document start positions
-  const docStarts = calculateDocumentStartPositions(pageLength, docLength, maxDocs);
+  const docStarts = calculateDocumentStartPositions(pageLength, docLength, maxDocs, CONFIG.gutterSize);
 
   // Determine score positions based on scoring type
   const scoreType = document.getElementById("score-type").value;
