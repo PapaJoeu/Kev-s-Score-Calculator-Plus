@@ -7,8 +7,8 @@
  * - Displays results + draws visualization
  */
 function runCalculator() {
-  const pageLength = parseFloat(document.getElementById("page-length").value.trim());
-  const docLength = parseFloat(document.getElementById("doc-length").value.trim());
+  const pageLength = CONFIG.pageLength;
+  const docLength = CONFIG.docLength;
 
   // Validate inputs
   if (isNaN(pageLength) || pageLength <= 0 || isNaN(docLength) || docLength <= 0) {
@@ -56,22 +56,6 @@ function adjustScores(delta) {
 
   currentAdjustedScores = currentAdjustedScores.map(p => roundTo3(p + delta));
   displayAdjustedResults(currentAdjustedScores);
-}
-
-/**
- * Helper: set page length input quickly
- * @param {number} value 
- */
-function quickSelectPageLength(value) {
-  document.getElementById("page-length").value = value;
-}
-
-/**
- * Helper: set document length input quickly
- * @param {number} value 
- */
-function quickSelectDocLength(value) {
-  document.getElementById("doc-length").value = value;
 }
 
 /**
