@@ -1,15 +1,30 @@
-// UI: handles DOM updates, table rendering
+// UI: handles DOM updates and table building
 
-let lastScorePositions = []; // Tracks unadjusted scores for adjustments
+let lastScorePositions = [];       // Original calculated score positions
+let currentAdjustedScores = [];    // Current state of adjusted scores
 
+/**
+ * Displays the main results: N-up, document starts, score positions
+ * @param {number} nUp - number of documents that fit
+ * @param {number[]} docStarts - document start positions
+ * @param {number[]} scorePositions - original score positions
+ */
 function displayResults(nUp, docStarts, scorePositions) {
   lastScorePositions = [...scorePositions];
+  currentAdjustedScores = [...scorePositions];  // Reset adjustments
+  clearAdjustedResults();
+
   const container = document.getElementById("results");
   let html = `<div><strong>N-up:</strong> ${nUp}</div>`;
-  html += buildResultsTable(docStarts, scorePositions);
+  html += buildDocStartTable(docStarts);
+  html += buildScoreTable(scorePositions);
   container.innerHTML = html;
 }
 
+/**
+ * Displays adjusted score positions
+ * @param {number[]} adjustedScores - adjusted positions
+ */
 function displayAdjustedResults(adjustedScores) {
   const container = document.getElementById("adjusted-results");
   let html = `<div><strong>Adjusted Scores</strong></div>`;
@@ -17,22 +32,44 @@ function displayAdjustedResults(adjustedScores) {
   container.innerHTML = html;
 }
 
-function buildResultsTable(docStarts, scorePositions) {
+/**
+ * Builds a table for document start positions
+ * @param {number[]} docStarts 
+ * @returns {string} HTML string
+ */
+function buildDocStartTable(docStarts) {
   let rows = `<table>
-    <tr>${CONFIG.tableHeaders.results.map(h => `<th>${h}</th>`).join("")}</tr>`;
+    <tr><th>#</th><th>Document Start (in)</th></tr>`;
   docStarts.forEach((pos, i) => {
-    rows += `<tr><td>Document Start</td><td>${i + 1}</td><td>${pos.toFixed(3)}</td></tr>`;
-  });
-  scorePositions.forEach((pos, i) => {
-    rows += `<tr><td>Score Position</td><td>${i + 1}</td><td>${pos.toFixed(3)}</td></tr>`;
+    rows += `<tr><td>${i + 1}</td><td>${pos.toFixed(3)}</td></tr>`;
   });
   rows += `</table>`;
   return rows;
 }
 
+/**
+ * Builds a table for score positions
+ * @param {number[]} scorePositions 
+ * @returns {string} HTML string
+ */
+function buildScoreTable(scorePositions) {
+  let rows = `<table>
+    <tr><th>#</th><th>Score Position (in)</th></tr>`;
+  scorePositions.forEach((pos, i) => {
+    rows += `<tr><td>${i + 1}</td><td>${pos.toFixed(3)}</td></tr>`;
+  });
+  rows += `</table>`;
+  return rows;
+}
+
+/**
+ * Builds a table for adjusted score positions
+ * @param {number[]} adjustedScores 
+ * @returns {string} HTML string
+ */
 function buildAdjustedTable(adjustedScores) {
   let rows = `<table>
-    <tr>${CONFIG.tableHeaders.adjusted.map(h => `<th>${h}</th>`).join("")}</tr>`;
+    <tr><th>Adjusted #</th><th>Measurement (in)</th></tr>`;
   adjustedScores.forEach((pos, i) => {
     rows += `<tr><td>${i + 1}</td><td>${pos.toFixed(3)}</td></tr>`;
   });
@@ -40,6 +77,9 @@ function buildAdjustedTable(adjustedScores) {
   return rows;
 }
 
+/**
+ * Clears the adjusted results section
+ */
 function clearAdjustedResults() {
   document.getElementById("adjusted-results").innerHTML = "";
 }
