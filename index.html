@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Kev's Scoring Calculator</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Kev's Scoring Calculator</h1>
+
+    <!-- SHEET DIMENSIONS SECTION -->
+    <div class="section">
+      <div class="section-title">Sheet Dimensions (inches)</div>
+      <div class="button-grid">
+        <button onclick="quickSelectPageLength(11)">11</button>
+        <button onclick="quickSelectPageLength(12)">12</button>
+        <button onclick="quickSelectPageLength(13)">13</button>
+        <button onclick="quickSelectPageLength(17)">17</button>
+        <button onclick="quickSelectPageLength(18)">18</button>
+        <button onclick="quickSelectPageLength(19)">19</button>
+        <button onclick="quickSelectPageLength(26)">26</button>
+        <button onclick="quickSelectPageLength(8.5)">8.5</button>
+      </div>
+      <label>
+        Sheet Length
+        <input id="page-length" type="number" step="0.001" placeholder="Enter sheet length">
+      </label>
+    </div>
+
+    <!-- DOCUMENT DIMENSIONS SECTION -->
+    <div class="section">
+      <div class="section-title">Document Dimensions (inches)</div>
+      <div class="button-grid">
+        <button onclick="quickSelectDocLength(3.5)">3.5</button>
+        <button onclick="quickSelectDocLength(4)">4</button>
+        <button onclick="quickSelectDocLength(5)">5</button>
+        <button onclick="quickSelectDocLength(5.5)">5.5</button>
+        <button onclick="quickSelectDocLength(6)">6</button>
+        <button onclick="quickSelectDocLength(8.5)">8.5</button>
+        <button onclick="quickSelectDocLength(9)">9</button>
+        <button onclick="quickSelectDocLength(11)">11</button>
+      </div>
+      <label>
+        Document Length
+        <input id="doc-length" type="number" step="0.001" placeholder="Enter doc length">
+      </label>
+    </div>
+
+    <!-- GUTTER SIZE SECTION -->
+    <div class="section">
+      <div class="section-title">Gutter Size (Locked)</div>
+      <label>
+        <input id="gutter-display" type="text" value="0.125" disabled>
+      </label>
+    </div>
+
+    <!-- SCORING TYPE SECTION -->
+    <div class="section">
+      <div class="section-title">Scoring Type</div>
+      <label>
+        <select id="score-type" onchange="selectScoreType(this.value)">
+          <option value="bifold">Bifold</option>
+          <option value="trifold">Trifold</option>
+          <option value="gatefold">Gate Fold</option>
+          <option value="custom">Custom</option>
+        </select>
+      </label>
+      <div id="custom-scores-container" style="display:none;">
+        <label>
+          Custom Scores (comma-separated)
+          <input id="custom-scores" type="text" placeholder="e.g. 1, 3.25">
+        </label>
+      </div>
+    </div>
+
+    <!-- CALCULATE BUTTON -->
+    <div class="section">
+      <button class="calculate" onclick="runCalculator()">Calculate + Visualize</button>
+    </div>
+
+    <!-- RESULTS TABLE -->
+    <div class="section" id="results">
+      <!-- Populated dynamically -->
+    </div>
+
+    <!-- ADJUST BUTTONS + ADJUSTED TABLE -->
+    <div class="section">
+      <div class="section-title">Adjust Scores</div>
+      <div class="button-grid">
+        <button onclick="adjustScores(-CONFIG.adjustStep)">← 1/16"</button>
+        <button onclick="adjustScores(CONFIG.adjustStep)">→ 1/16"</button>
+      </div>
+    </div>
+    <div class="section" id="adjusted-results">
+      <!-- Populated dynamically -->
+    </div>
+
+    <!-- VISUALIZER -->
+    <div class="section">
+      <canvas id="visualizer" width="600" height="100"></canvas>
+    </div>
+  </div>
+
+  <!-- JS FILES -->
+  <script src="js/config.js"></script>
+  <script src="js/calc.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/draw.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
