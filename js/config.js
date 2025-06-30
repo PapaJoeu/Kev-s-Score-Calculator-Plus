@@ -12,6 +12,22 @@ const CONFIG = {
   canvas: {
     width: 600,
     height: 100
+  },
+  // preset values for dynamic UI generators
+  sheetPresets: [8.5, 11, 12, 13, 17, 18, 19, 26],
+  docPresets: [3.5, 4, 5, 5.5, 6, 8.5, 9, 11],
+  gutterPresets: [0.125, 0.25],
+  scoreTypes: [
+    { value: 'bifold',   label: 'Bifold'   },
+    { value: 'trifold',  label: 'Trifold'  },
+    { value: 'gatefold', label: 'Gate Fold'},
+    { value: 'custom',   label: 'Custom'   }
+  ],
+  // control metadata for free-form inputs
+  controls: {
+    pageLength: { label: 'Sheet Length',   id: 'page-length',   step: 0.001 },
+    docLength:  { label: 'Document Length', id: 'doc-length',    step: 0.001 },
+    gutter:     { label: 'Custom Gutter',   id: 'gutter-custom', step: 0.001 }
   }
 };
 
