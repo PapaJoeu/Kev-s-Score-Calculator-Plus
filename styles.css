@@ -1,104 +1,127 @@
-/* ======================================
-   BASE STYLES + RESET
-   ====================================== */
-/* Remove default margins/padding and set a base font */
+/* ==========================================
+   BASE + LAYOUT STYLES
+   ========================================== */
+
+/* Reset + base styles */
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: #f5f5f5;
-  margin: 0;
-  padding: 10px;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
   color: #333;
+  margin: 0;
+  padding: 0;
 }
 
-/* Main container centers the app and gives it a max width */
+/* Main container centers content and sets width */
 .container {
   max-width: 600px;
+  margin: 0 auto;
+  padding: 16px;
   background: #fff;
-  margin: auto;
-  padding: 10px;
-  border: 2px solid #333;
   border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
-/* Page header styling */
-h1 {
-  background: navy;
-  color: white;
-  padding: 12px;
+/* ==========================================
+   HEADERS + SECTION TITLES
+   ========================================== */
+
+.main-header {
+  font-size: 1.6rem;
+  font-weight: 700;
   text-align: center;
-  font-size: 1.2rem;
-  border-radius: 4px;
+  color: #007bff;
+  margin-bottom: 16px;
 }
 
-/* ======================================
-   SECTION STYLING
-   ====================================== */
 .section {
-  margin-bottom: 15px;
+  margin-bottom: 24px;
 }
 
 .section-title {
-  font-weight: bold;
-  color: navy;
-  margin-bottom: 5px;
   font-size: 1rem;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 8px;
 }
 
-/* ======================================
-   BUTTONS + GRIDS
-   ====================================== */
-/* Grid of preset buttons (auto-fit ensures mobile-friendly wrapping) */
+/* ==========================================
+   BUTTON STYLES
+   ========================================== */
+
+/* General button style */
+button {
+  appearance: none;
+  border: none;
+  border-radius: 6px;
+  background-color: #007bff;
+  color: #fff;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+/* Button active / hover states */
+button:hover {
+  background-color: #0056b3;
+}
+
+button:active {
+  background-color: #00408d;
+}
+
+/* Preset button grid */
 .button-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   gap: 8px;
-  margin-bottom: 8px;
 }
 
-/* General button styling */
-button {
-  padding: 10px;
-  font-size: 16px;
-  min-height: 44px; /* iOS recommended tap size */
-  border: 1px solid #ccc;
-  background: #e0e0e0;
-  border-radius: 4px;
-}
-
-button:active {
-  background: #ccc;
-}
-
+/* Manual calculate button larger width */
 button.calculate {
   width: 100%;
-  background: #007bff;
-  color: white;
-  font-weight: bold;
+  background-color: #28a745;
 }
 
-/* ======================================
+button.calculate:hover {
+  background-color: #218838;
+}
+
+button.calculate:active {
+  background-color: #1e7e34;
+}
+
+/* Selected preset button highlight */
+button.selected {
+  background-color: #0056b3;
+  font-weight: 600;
+}
+
+/* ==========================================
    INPUTS + SELECTS
-   ====================================== */
+   ========================================== */
+
 input, select {
   width: 100%;
-  padding: 8px;
+  padding: 12px;
   font-size: 16px;
-  min-height: 44px;
-  margin-top: 4px;
-  margin-bottom: 8px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 6px;
+  margin-top: 4px;
+  margin-bottom: 12px;
+  box-sizing: border-box;
 }
 
-/* Disabled inputs (like gutter display) styling */
 input[disabled] {
-  background: #f0f0f0;
-  color: #555;
+  background-color: #f0f0f0;
+  color: #666;
 }
 
-/* ======================================
-   TABLES FOR RESULTS
-   ====================================== */
+/* ==========================================
+   TABLE STYLES
+   ========================================== */
+
 table {
   width: 100%;
   border-collapse: collapse;
@@ -106,50 +129,84 @@ table {
 }
 
 th, td {
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
   padding: 6px;
   text-align: center;
 }
 
 th {
-  background: #f0f0f0;
-  font-weight: bold;
+  background: #f2f2f2;
+  font-weight: 600;
 }
 
-/* ======================================
+/* Flash effect for table update feedback */
+.flash {
+  animation: flash-bg 0.5s ease;
+}
+
+@keyframes flash-bg {
+  from { background-color: #e0f7fa; }
+  to { background-color: transparent; }
+}
+
+/* ==========================================
    CANVAS VISUALIZER
-   ====================================== */
+   ========================================== */
+
 canvas {
   width: 100%;
   height: auto;
-  max-width: 600px;
-  border: 1px solid #333;
   display: block;
-  margin: auto;
-  border-radius: 4px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fafafa;
 }
 
-/* ======================================
-   RESPONSIVE TWEAKS FOR iPhone 15 PRO
-   ====================================== */
-/* Make sure all sections have padding on smaller screens */
+/* ==========================================
+   ADJUSTMENT CONTROLS + FIXED FOOTER
+   ========================================== */
+
+.adjust-display {
+  text-align: center;
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+  margin: 8px 0;
+}
+
+.fixed-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border-top: 1px solid #ddd;
+  padding: 8px 16px;
+  box-shadow: 0 -2px 6px rgba(0,0,0,0.05);
+  z-index: 100;
+}
+
+/* ==========================================
+   RESPONSIVE TWEAKS
+   ========================================== */
+
 @media (max-width: 430px) {
   .container {
-    padding: 8px;
+    border-radius: 0;
+    box-shadow: none;
   }
 
-  h1 {
-    font-size: 1rem;
-    padding: 10px;
+  .main-header {
+    font-size: 1.4rem;
   }
 
   .section-title {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
   }
 
   button {
     font-size: 15px;
-    padding: 8px;
+    padding: 12px;
   }
 
   input, select {
