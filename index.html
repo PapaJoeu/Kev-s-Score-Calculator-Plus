@@ -50,10 +50,12 @@
 
     <!-- GUTTER SIZE SECTION -->
     <section class="section">
-      <h2 class="section-title">Gutter Size (Locked)</h2>
-      <label>
-        <input id="gutter-display" type="text" value="0.125" disabled>
-      </label>
+      <h2 class="section-title">Gutter Size</h2>
+      <div class="gutter-picker">
+        <button data-gutter="0.125" class="gutter-btn active">0.125″</button>
+        <button data-gutter="0.25" class="gutter-btn">0.25″</button>
+        <input id="gutter-custom" type="number" step="0.001" placeholder="Custom″" />
+      </div>
     </section>
 
     <!-- SCORING TYPE SECTION -->
