@@ -80,6 +80,54 @@ function buildAdjustedTable(adjustedScores) {
 /**
  * Clears the adjusted results section
  */
+
 function clearAdjustedResults() {
   document.getElementById("adjusted-results").innerHTML = "";
 }
+
+// Gutter picker controls
+document.addEventListener("DOMContentLoaded", () => {
+  const gutterButtons = document.querySelectorAll(".gutter-btn");
+  const gutterCustom = document.getElementById("gutter-custom");
+
+  // Apply selected gutter size and update UI
+  function setGutter(size) {
+    CONFIG.gutterSize = size;
+    // Highlight preset button if matching
+    gutterButtons.forEach(btn => {
+      btn.classList.toggle("active", parseFloat(btn.dataset.gutter) === size);
+    });
+    // If size not in presets, show in custom field
+    if (gutterCustom) {
+      const isPreset = Array.from(gutterButtons).some(btn => parseFloat(btn.dataset.gutter) === size);
+      gutterCustom.value = isPreset ? "" : size.toFixed(3);
+    }
+    // Re-run calculation with new gutter
+    if (typeof runCalculator === "function") {
+      runCalculator();
+    }
+  }
+
+  // Handle preset button clicks
+  gutterButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const size = parseFloat(btn.dataset.gutter);
+      setGutter(size);
+    });
+  });
+
+  // Handle custom input changes
+  if (gutterCustom) {
+    gutterCustom.addEventListener("input", () => {
+      const val = parseFloat(gutterCustom.value);
+      if (!isNaN(val)) {
+        // Unset active on presets
+        gutterButtons.forEach(btn => btn.classList.remove("active"));
+        setGutter(val);
+      }
+    });
+  }
+
+  // Initialize to default config value
+  setGutter(CONFIG.gutterSize);
+});
