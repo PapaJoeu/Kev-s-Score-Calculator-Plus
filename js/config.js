@@ -14,6 +14,11 @@ const CONFIG = {
     height: 100
   },
   
+  // default control values
+  pageLength: 18,            // default sheet length (inches)
+  docLength: 4,              // default document length (inches)
+  scoreType: 'bifold',       // default scoring type
+  
   // preset values for dynamic UI generators
   sheetPresets: [8.5, 11, 12, 13, 17, 18, 19, 26],
   docPresets: [3.5, 4, 5, 5.5, 6, 8.5, 9, 11],
