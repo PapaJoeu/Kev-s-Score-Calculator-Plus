@@ -1,17 +1,10 @@
-// UI: handles DOM updates and table building
+// UI module for Kev's Scoring Calculator
 
-let lastScorePositions = [];       // Original calculated score positions
-let currentAdjustedScores = [];    // Current state of adjusted scores
-
-/**
- * Displays the main results: N-up, document starts, score positions
- * @param {number} nUp - number of documents that fit
- * @param {number[]} docStarts - document start positions
- * @param {number[]} scorePositions - original score positions
- */
+// -- Display Results ------------------------------------------------
+// Show main results: N-up, start positions, score positions
 function displayResults(nUp, docStarts, scorePositions) {
   lastScorePositions = [...scorePositions];
-  currentAdjustedScores = [...scorePositions];  // Reset adjustments
+  currentAdjustedScores = [...scorePositions];
   clearAdjustedResults();
 
   const container = document.getElementById("results");
@@ -21,10 +14,7 @@ function displayResults(nUp, docStarts, scorePositions) {
   container.innerHTML = html;
 }
 
-/**
- * Displays adjusted score positions
- * @param {number[]} adjustedScores - adjusted positions
- */
+// Show adjusted score positions
 function displayAdjustedResults(adjustedScores) {
   const container = document.getElementById("adjusted-results");
   let html = `<div><strong>Adjusted Scores</strong></div>`;
@@ -32,11 +22,13 @@ function displayAdjustedResults(adjustedScores) {
   container.innerHTML = html;
 }
 
-/**
- * Builds a table for document start positions
- * @param {number[]} docStarts 
- * @returns {string} HTML string
- */
+// Clear adjusted results
+function clearAdjustedResults() {
+  document.getElementById("adjusted-results").innerHTML = "";
+}
+
+// -- Table Builders -------------------------------------------------
+// Build table for document start positions
 function buildDocStartTable(docStarts) {
   let rows = `<table>
     <tr><th>#</th><th>Document Start (in)</th></tr>`;
@@ -47,11 +39,7 @@ function buildDocStartTable(docStarts) {
   return rows;
 }
 
-/**
- * Builds a table for score positions
- * @param {number[]} scorePositions 
- * @returns {string} HTML string
- */
+// Build table for score positions
 function buildScoreTable(scorePositions) {
   let rows = `<table>
     <tr><th>#</th><th>Score Position (in)</th></tr>`;
@@ -62,11 +50,7 @@ function buildScoreTable(scorePositions) {
   return rows;
 }
 
-/**
- * Builds a table for adjusted score positions
- * @param {number[]} adjustedScores 
- * @returns {string} HTML string
- */
+// Build table for adjusted scores
 function buildAdjustedTable(adjustedScores) {
   let rows = `<table>
     <tr><th>Adjusted #</th><th>Measurement (in)</th></tr>`;
@@ -77,57 +61,94 @@ function buildAdjustedTable(adjustedScores) {
   return rows;
 }
 
-/**
- * Clears the adjusted results section
- */
-
-function clearAdjustedResults() {
-  document.getElementById("adjusted-results").innerHTML = "";
+// -- Picker and Input Generators -----------------------------------
+// Create a group of preset buttons with optional custom input
+function createPicker(containerId, presets, defaultValue, onSelect) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = ''; // clear existing
+  presets.forEach(val => {
+    const btn = document.createElement('button');
+    btn.textContent = val;
+    btn.dataset.value = val;
+    btn.className = 'picker-btn';
+    btn.addEventListener('click', () => onSelect(val));
+    container.appendChild(btn);
+  });
+  // custom field
+  const input = document.createElement('input');
+  input.type = 'number';
+  input.step = '0.001';
+  input.placeholder = 'Custom';
+  input.addEventListener('input', () => {
+    const v = parseFloat(input.value);
+    if (!isNaN(v)) onSelect(v);
+  });
+  container.appendChild(input);
+  // initialize selection state
+  onSelect(defaultValue);
 }
 
-// Gutter picker controls
-document.addEventListener("DOMContentLoaded", () => {
-  const gutterButtons = document.querySelectorAll(".gutter-btn");
-  const gutterCustom = document.getElementById("gutter-custom");
-
-  // Apply selected gutter size and update UI
-  function setGutter(size) {
-    CONFIG.gutterSize = size;
-    // Highlight preset button if matching
-    gutterButtons.forEach(btn => {
-      btn.classList.toggle("active", parseFloat(btn.dataset.gutter) === size);
-    });
-    // If size not in presets, show in custom field
-    if (gutterCustom) {
-      const isPreset = Array.from(gutterButtons).some(btn => parseFloat(btn.dataset.gutter) === size);
-      gutterCustom.value = isPreset ? "" : size.toFixed(3);
-    }
-    // Re-run calculation with new gutter
-    if (typeof runCalculator === "function") {
-      runCalculator();
-    }
-  }
-
-  // Handle preset button clicks
-  gutterButtons.forEach(btn => {
-    btn.addEventListener("click", () => {
-      const size = parseFloat(btn.dataset.gutter);
-      setGutter(size);
-    });
+// Fill a dropdown <select> element
+function createDropdown(selectId, options, defaultValue, onChange) {
+  const select = document.getElementById(selectId);
+  select.innerHTML = '';
+  options.forEach(opt => {
+    const option = document.createElement('option');
+    option.value = opt.value;
+    option.text = opt.label;
+    select.appendChild(option);
   });
+  select.value = defaultValue;
+  select.addEventListener('change', () => onChange(select.value));
+}
 
-  // Handle custom input changes
-  if (gutterCustom) {
-    gutterCustom.addEventListener("input", () => {
-      const val = parseFloat(gutterCustom.value);
-      if (!isNaN(val)) {
-        // Unset active on presets
-        gutterButtons.forEach(btn => btn.classList.remove("active"));
-        setGutter(val);
-      }
+// Generate labeled inputs for free-form values
+function createInputs(containerId, controlsMap, onInput) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = '';
+  Object.keys(controlsMap).forEach(key => {
+    const cfg = controlsMap[key];
+    const label = document.createElement('label');
+    label.textContent = cfg.label;
+    const input = document.createElement('input');
+    input.id = cfg.id;
+    input.type = 'number';
+    input.step = cfg.step;
+    input.value = CONFIG[key];
+    input.addEventListener('input', () => {
+      const v = parseFloat(input.value);
+      if (!isNaN(v)) onInput(key, v);
     });
-  }
+    label.appendChild(input);
+    container.appendChild(label);
+  });
+}
 
-  // Initialize to default config value
-  setGutter(CONFIG.gutterSize);
+// -- Initialization ------------------------------------------------- 
+document.addEventListener('DOMContentLoaded', () => {
+  // result state vars
+  window.lastScorePositions = [];
+  window.currentAdjustedScores = [];
+
+  // generate pickers and inputs
+  createPicker('sheet-picker', CONFIG.sheetPresets, CONFIG.pageLength, val => {
+    CONFIG.pageLength = val;
+    runCalculator();
+  });
+  createPicker('doc-picker', CONFIG.docPresets, CONFIG.docLength, val => {
+    CONFIG.docLength = val;
+    runCalculator();
+  });
+  createPicker('gutter-picker', CONFIG.gutterPresets, CONFIG.gutterSize, val => {
+    CONFIG.gutterSize = val;
+    runCalculator();
+  });
+  createDropdown('score-type', CONFIG.scoreTypes, CONFIG.scoreType, val => {
+    selectScoreType(val);
+    runCalculator();
+  });
+  createInputs('controls-container', CONFIG.controls, (key, val) => {
+    CONFIG[key] = val;
+    runCalculator();
+  });
 });

@@ -13,6 +13,7 @@ const CONFIG = {
     width: 600,
     height: 100
   },
+  
   // preset values for dynamic UI generators
   sheetPresets: [8.5, 11, 12, 13, 17, 18, 19, 26],
   docPresets: [3.5, 4, 5, 5.5, 6, 8.5, 9, 11],
