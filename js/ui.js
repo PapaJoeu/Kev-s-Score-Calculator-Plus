@@ -67,35 +67,47 @@ function createPicker(containerId, presets, defaultValue, onSelect) {
   const container = document.getElementById(containerId);
   const presetsContainer = container.querySelector('.picker-presets');
   const customContainer = container.querySelector('.picker-custom');
+  const input = customContainer.querySelector('input');
 
-  // clear existing buttons
+  // clear existing
   presetsContainer.innerHTML = '';
+  let buttons = [];
 
-  // add preset buttons
+  // helper to update UI and call onSelect
+  function selectValue(val) {
+    // toggle button active states
+    buttons.forEach(btn => {
+      btn.classList.toggle('active', parseFloat(btn.dataset.value) === val);
+    });
+    // update custom input: clear if preset, else show value
+    const isPreset = buttons.some(btn => parseFloat(btn.dataset.value) === val);
+    input.value = isPreset ? '' : val;
+    // invoke callback
+    onSelect(val);
+  }
+
+  // create preset buttons
   presets.forEach(val => {
     const btn = document.createElement('button');
     btn.textContent = val;
     btn.dataset.value = val;
     btn.className = 'picker-btn';
-    btn.addEventListener('click', () => onSelect(val));
+    btn.addEventListener('click', () => selectValue(val));
     presetsContainer.appendChild(btn);
+    buttons.push(btn);
   });
 
-  // setup custom input
-  const input = customContainer.querySelector('input');
-  input.value = '';
-  if (input._listener) {
-    input.removeEventListener('input', input._listener);
-  }
+  // wire custom input
+  if (input._listener) input.removeEventListener('input', input._listener);
   const listener = () => {
     const v = parseFloat(input.value);
-    if (!isNaN(v)) onSelect(v);
+    if (!isNaN(v)) selectValue(v);
   };
   input.addEventListener('input', listener);
   input._listener = listener;
 
-  // initialize selection
-  onSelect(defaultValue);
+  // initialize with default
+  selectValue(defaultValue);
 }
 
 // Fill a dropdown <select> element
