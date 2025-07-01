@@ -69,23 +69,7 @@ function createPicker(containerId, presets, defaultValue, onSelect) {
       });
       
       if (isScorePicker) {
-        // For score picker, toggle the external custom container
-        if (scoreCustomContainer) {
-          if (isCurrentlyActive) {
-            scoreCustomContainer.classList.remove("show");
-            // Deactivate the button
-            buttons.forEach(btn => {
-              if (btn.dataset.value === 'custom') {
-                btn.classList.remove('active');
-              }
-            });
-          } else {
-            scoreCustomContainer.classList.add("show");
-            const scoreInput = document.getElementById("custom-scores");
-            if (scoreInput) scoreInput.focus();
-          }
-        }
-        // Always call onSelect for score picker to maintain compatibility
+        // For score picker, just call onSelect immediately (selectScoreType will handle toggle)
         onSelect(val);
       } else {
         // For dimension pickers, toggle the custom input field visibility

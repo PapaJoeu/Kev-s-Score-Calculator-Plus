@@ -106,10 +106,25 @@ function adjustScores(delta) {
  */
 function selectScoreType(value) {
   const customContainer = document.getElementById("custom-scores-container");
+  const customBtn = document.querySelector('#score-picker .picker-btn[data-value="custom"]');
+  
   if (value === "custom") {
-    customContainer.classList.add("show");
-    document.getElementById("custom-scores").focus();
+    // Check if it's currently active/visible to implement toggle
+    const isCurrentlyVisible = customContainer.classList.contains("show");
+    
+    if (isCurrentlyVisible) {
+      // Hide it (toggle off)
+      customContainer.classList.remove("show");
+      if (customBtn) customBtn.classList.remove("active");
+    } else {
+      // Show it (toggle on)
+      customContainer.classList.add("show");
+      if (customBtn) customBtn.classList.add("active");
+      document.getElementById("custom-scores").focus();
+    }
   } else {
+    // Hide custom input when other score types are selected
     customContainer.classList.remove("show");
+    if (customBtn) customBtn.classList.remove("active");
   }
 }
