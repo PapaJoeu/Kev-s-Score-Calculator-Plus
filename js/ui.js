@@ -15,10 +15,12 @@ function buildCombinedScoreTable(orig, adjusted) {
 // show main results
 function displayResults(nUp, docStarts, scorePositions) {
   window.lastScorePositions = [...scorePositions];
-  // render combined scores table
+  // render combined scores table using original scores vs current adjusted scores
   const resultsEl = document.getElementById("results");
   let html = `<div><strong>N-up:</strong> ${nUp}</div>`;
-  html += buildCombinedScoreTable(scorePositions, window.currentAdjustedScores);
+  // Use original scores as first parameter and current adjusted scores as second
+  const originalScores = window.originalScores && window.originalScores.length > 0 ? window.originalScores : scorePositions;
+  html += buildCombinedScoreTable(originalScores, window.currentAdjustedScores);
   resultsEl.innerHTML = html;
   // render doc start positions below
   const docEl = document.getElementById("doc-starts");
@@ -151,6 +153,14 @@ function createPicker(containerId, presets, defaultValue, onSelect) {
 document.addEventListener("DOMContentLoaded", () => {
   window.lastScorePositions = [];
   window.currentAdjustedScores = [];
+  
+  // Initialize adjustment tracking
+  window.netAdjustment = 0;
+  // Initialize display - use direct update since updateAdjustDisplay may not be loaded yet
+  const adjustDisplay = document.getElementById("adjust-display");
+  if (adjustDisplay) {
+    adjustDisplay.textContent = "0.000";
+  }
 
   createPicker(
     "sheet-picker",

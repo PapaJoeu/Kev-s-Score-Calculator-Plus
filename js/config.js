@@ -8,6 +8,7 @@ const CONFIG = {
   gutterSize: 0.125,          // default gutter size (inches)
   scoreType: 'bifold',        // default scoring type
   adjustStep: 0.0625,         // manual adjustment step (1/16 in)
+  adjustmentIncrement: 0.0625, // adjustment increment per button press (1/16")
 
   // preset values for dynamic UI generators
   // There should always be a multiple of 3 minus 1 for even distribution across buttons

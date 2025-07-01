@@ -599,12 +599,57 @@ canvas {
 /* ==========================================
    ADJUSTMENT CONTROLS
    ========================================== */
+
+#adjust-section {
+  display: flex;
+  justify-content: center;
+  margin: 16px 0;
+}
+
+.adjust-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 300px;
+  gap: 12px;
+}
+
+.adjust-btn {
+  width: 44px;
+  height: 44px;
+  font-size: 18px;
+  font-weight: 600;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.adjust-btn:hover {
+  background-color: #0056b3;
+}
+
+.adjust-btn:active {
+  background-color: #00408d;
+}
+
 .adjust-display {
+  flex: 1;
   text-align: center;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 16px;
   color: #333;
-  margin: 8px 0;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-family: 'Courier New', monospace;
 }
 
 /* ==========================================

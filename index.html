@@ -74,11 +74,13 @@
       <canvas id="visualizer"></canvas>
     </section>
 
-        <!-- Adjustment Controls -->
-    <section class="section" id="adjust-section" style="text-align: center;">
-      <button onclick="adjustScores(-CONFIG.adjustStep)">← 1/16″</button>
-      <span id="adjust-display">Current Adjust: +0.000″</span>
-      <button onclick="adjustScores(CONFIG.adjustStep)">→ 1/16″</button>
+    <!-- Adjustment Controls -->
+    <section class="section" id="adjust-section">
+      <div class="adjust-controls">
+        <button class="adjust-btn adjust-left" onclick="adjustScores(-1)">←</button>
+        <span id="adjust-display" class="adjust-display">0.000</span>
+        <button class="adjust-btn adjust-right" onclick="adjustScores(1)">→</button>
+      </div>
     </section>
 
     <!-- Results Display -->

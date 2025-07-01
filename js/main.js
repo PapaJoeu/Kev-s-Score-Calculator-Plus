@@ -4,6 +4,10 @@
 window._lastNup = 0;
 window._lastDocStarts = [];
 
+// track adjustment state
+window.netAdjustment = 0;  // integer multiplier for adjustments
+window.originalScores = []; // store original scores before any adjustments
+
 /**
  * Runs the calculator:
  * 1. Validates inputs
@@ -49,11 +53,16 @@ function runCalculator() {
 
   console.log('[runCalculator] Calculated scorePositions:', scorePositions);
 
+  // reset adjustment tracking
+  window.netAdjustment = 0;
+  updateAdjustDisplay();
+
   // store last inputs for adjustments
   window._lastNup = nUp;
   window._lastDocStarts = [...docStarts];
 
-  // initialize adjusted positions
+  // store original and current scores
+  window.originalScores = [...scorePositions];
   window.currentAdjustedScores = [...scorePositions];
   window.lastScorePositions     = [...scorePositions];
 
@@ -65,36 +74,36 @@ function runCalculator() {
 }
 
 /**
- * Adjusts current scores by delta and re-renders table/visuals.
- * @param {number} delta amount to shift each score position
+ * Adjusts current scores by incrementing/decrementing the net adjustment multiplier.
+ * @param {number} direction +1 for right, -1 for left
  */
-function adjustScores(delta) {
-  // Debug logging to understand the state
-  console.log('[adjustScores] checking state:', {
-    currentAdjustedScores: window.currentAdjustedScores,
-    length: window.currentAdjustedScores?.length,
-    lastNup: window._lastNup,
-    lastDocStarts: window._lastDocStarts
-  });
-
-  // Check if we have valid adjusted scores to work with
-  if (!window.currentAdjustedScores || window.currentAdjustedScores.length === 0) {
-    console.log('[adjustScores] No adjusted scores available, trying to run calculator first');
-    // Try to run calculator first to initialize the scores
+function adjustScores(direction) {
+  // Check if we have valid original scores to work with
+  if (!window.originalScores || window.originalScores.length === 0) {
+    console.log('[adjustScores] No original scores available, trying to run calculator first');
     runCalculator();
-    // Check again after running calculator
-    if (!window.currentAdjustedScores || window.currentAdjustedScores.length === 0) {
+    if (!window.originalScores || window.originalScores.length === 0) {
       alert("Please calculate first before adjusting. Make sure sheet and document lengths are valid positive numbers.");
       return;
     }
   }
   
-  console.log('[adjustScores] Applying delta:', delta);
-  // update adjusted scores
-  window.currentAdjustedScores = window.currentAdjustedScores.map(p => roundTo3(p + delta));
-  // re-display using last inputs and adjusted scores
+  // Update net adjustment multiplier
+  window.netAdjustment += direction;
+  
+  // Calculate total adjustment
+  const totalAdjustment = window.netAdjustment * CONFIG.adjustmentIncrement;
+  
+  console.log('[adjustScores] Net adjustment:', window.netAdjustment, 'Total:', totalAdjustment);
+  
+  // Apply adjustment to original scores
+  window.currentAdjustedScores = window.originalScores.map(p => roundTo3(p + totalAdjustment));
+  
+  // Update display
+  updateAdjustDisplay();
+  
+  // Re-display results and visualization
   displayResults(window._lastNup, window._lastDocStarts, window.currentAdjustedScores);
-  // redraw visualization with adjusted scores
   const pageLength = CONFIG.pageLength;
   const docLength = CONFIG.docLength;
   drawVisualization(pageLength, window._lastDocStarts, docLength, window.currentAdjustedScores);
@@ -127,4 +136,25 @@ function selectScoreType(value) {
     customContainer.classList.remove("show");
     if (customBtn) customBtn.classList.remove("active");
   }
+}
+
+/**
+ * Updates the adjustment display with current net adjustment value.
+ */
+function updateAdjustDisplay() {
+  const totalAdjustment = window.netAdjustment * CONFIG.adjustmentIncrement;
+  const displayValue = totalAdjustment >= 0 ? `+${totalAdjustment.toFixed(3)}` : totalAdjustment.toFixed(3);
+  
+  const adjustDisplay = document.getElementById("adjust-display");
+  if (adjustDisplay) {
+    adjustDisplay.textContent = displayValue;
+  }
+}
+
+/**
+ * Resets adjustment tracking when inputs change.
+ */
+function resetAdjustments() {
+  window.netAdjustment = 0;
+  updateAdjustDisplay();
 }
