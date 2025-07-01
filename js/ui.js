@@ -51,6 +51,8 @@ function createPicker(containerId, presets, defaultValue, onSelect) {
   
   // Determine if this is a scoring picker (has custom-scores-container)
   const isScorePicker = containerId === "score-picker";
+  // For score picker, get the external custom container
+  const scoreCustomContainer = isScorePicker ? document.getElementById("custom-scores-container") : null;
 
   presetsEl.innerHTML = "";
   let buttons = [];
@@ -67,7 +69,23 @@ function createPicker(containerId, presets, defaultValue, onSelect) {
       });
       
       if (isScorePicker) {
-        // For score picker, just call onSelect immediately (it will handle showing custom input)
+        // For score picker, toggle the external custom container
+        if (scoreCustomContainer) {
+          if (isCurrentlyActive) {
+            scoreCustomContainer.classList.remove("show");
+            // Deactivate the button
+            buttons.forEach(btn => {
+              if (btn.dataset.value === 'custom') {
+                btn.classList.remove('active');
+              }
+            });
+          } else {
+            scoreCustomContainer.classList.add("show");
+            const scoreInput = document.getElementById("custom-scores");
+            if (scoreInput) scoreInput.focus();
+          }
+        }
+        // Always call onSelect for score picker to maintain compatibility
         onSelect(val);
       } else {
         // For dimension pickers, toggle the custom input field visibility
@@ -93,6 +111,9 @@ function createPicker(containerId, presets, defaultValue, onSelect) {
       // Hide custom input and update buttons
       if (customContainer && !isScorePicker) {
         customContainer.classList.remove("show");
+      }
+      if (scoreCustomContainer && isScorePicker) {
+        scoreCustomContainer.classList.remove("show");
       }
       buttons.forEach(btn =>
         btn.classList.toggle("active", btn.dataset.value === val || parseFloat(btn.dataset.value) === val)

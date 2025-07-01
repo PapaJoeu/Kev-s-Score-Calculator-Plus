@@ -107,9 +107,9 @@ function adjustScores(delta) {
 function selectScoreType(value) {
   const customContainer = document.getElementById("custom-scores-container");
   if (value === "custom") {
-    customContainer.style.display = "block";
+    customContainer.classList.add("show");
     document.getElementById("custom-scores").focus();
   } else {
-    customContainer.style.display = "none";
+    customContainer.classList.remove("show");
   }
 }
