@@ -3,21 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Kev's Scoring Calculator</title>
+  <title>Kev's Bitchin' Score Calculator</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="container">
     <!-- Page Title -->
-    <h1 class="main-header">Kev's Scoring Calculator</h1>
+    <h1 class="main-header">Kev's Bitchin' Score Calculator</h1>
+    <p class="sub-header"><em>It works for perfing too</em></p>
 
     <!-- Sheet Dimensions Picker -->
     <section class="section" id="sheet-section">
-      <h2 class="section-title">Sheet Dimensions (inches)</h2>
+      <h2 class="section-title">Sheet Dimensions</h2>
       <div id="sheet-picker" class="picker">
         <div class="picker-presets" id="sheet-presets"></div>
         <div class="picker-custom">
-          <label for="sheet-custom">Custom Sheet Length</label>
+          <label for="sheet-custom">Sheet Length</label>
           <input id="sheet-custom" type="number" step="1" />
         </div>
       </div>
@@ -25,11 +26,11 @@
 
     <!-- Document Dimensions Picker -->
     <section class="section" id="doc-section">
-      <h2 class="section-title">Document Dimensions (inches)</h2>
+      <h2 class="section-title">Document Dimensions</h2>
       <div id="doc-picker" class="picker">
         <div class="picker-presets" id="doc-presets"></div>
         <div class="picker-custom">
-          <label for="doc-custom">Custom Document Length</label>
+          <label for="doc-custom">Document Length</label>
           <input id="doc-custom" type="number" step="0.25" />
         </div>
       </div>
@@ -37,11 +38,11 @@
 
     <!-- Gutter Size Picker -->
     <section class="section" id="gutter-section">
-      <h2 class="section-title">Gutter Size (inches)</h2>
+      <h2 class="section-title">Gutter Size</h2>
       <div id="gutter-picker" class="picker">
         <div class="picker-presets" id="gutter-presets"></div>
         <div class="picker-custom">
-          <label for="gutter-custom">Custom Gutter Size</label>
+          <label for="gutter-custom">Gutter Length</label>
           <input id="gutter-custom" type="number" step="0.125" />
         </div>
       </div>
@@ -55,7 +56,7 @@
           <button class="picker-btn" data-value="bifold">Bifold</button>
           <button class="picker-btn" data-value="trifold">Trifold</button>
           <button class="picker-btn" data-value="gatefold">Gate Fold</button>
-          <button class="picker-btn" data-value="custom">Custom</button>
+          <button class="picker-btn" data-value="custom">Custom Score</button>
         </div>
       </div>
       <div id="custom-scores-container" style="display:none;">
@@ -66,7 +67,7 @@
 
     <!-- Calculate Button & Visualization -->
     <section class="section" id="calculate-section">
-      <button class="calculate" onclick="runCalculator()">Calculate + Visualize</button>
+      <button class="calculate" onclick="runCalculator()">Calculate</button>
     </section>
     <section class="section" id="visualizer-section">
       <canvas id="visualizer"></canvas>
@@ -81,7 +82,8 @@
     <!-- Adjustment Controls -->
     <section class="section" id="adjust-section" style="text-align: center;">
       <button onclick="adjustScores(-CONFIG.adjustStep)">← 1/16″</button>
-      <span id="adjust-display">Current Adjust: +0.000″</span>
+      <!-- TODO: Make the current adjust value change depending on the actual adjustments -->
+      <span id="adjust-display">Current Adjust:</span>
       <button onclick="adjustScores(CONFIG.adjustStep)">→ 1/16″</button>
     </section>
   </div>

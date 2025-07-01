@@ -190,6 +190,12 @@ th {
   font-weight: 600;
 }
 
+/* Subheader note style */
+p.sub-header {
+  font-style: italic;
+  text-align: center;
+}
+
 /* Flash effect for table update feedback */
 .flash {
   animation: flash-bg 0.5s ease;
