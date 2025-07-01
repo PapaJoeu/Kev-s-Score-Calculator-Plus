@@ -10,9 +10,10 @@ const CONFIG = {
   adjustStep: 0.0625,         // manual adjustment step (1/16 in)
 
   // preset values for dynamic UI generators
-  sheetPresets: [18, 19, 26, 'custom'],
-  docPresets: [4, 7, 8, 9, 10, 14, 'custom'],
-  gutterPresets: [0.125, 0.25, 0.5, 'custom'],
+  // There should always be a multiple of 3 minus 1 for even distribution across buttons
+  sheetPresets: [18, 19, 'custom'],
+  docPresets: [4, 8.5, 'custom'],
+  gutterPresets: [0.125, 0.25, 'custom'],
   scoreTypes: [
     { value: 'bifold',   label: 'Bifold'   },
     { value: 'trifold',  label: 'Trifold'  },
@@ -24,7 +25,7 @@ const CONFIG = {
   tableHeaders: {
     results: ['Type', '#', 'Measurement (in)'],
     adjusted: ['Adjusted #', 'Measurement (in)']
-  },
+ },
 
   // dimensions for the visualization canvas
   canvas: {

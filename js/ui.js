@@ -48,29 +48,41 @@ function createPicker(containerId, presets, defaultValue, onSelect) {
   const presetsEl = container.querySelector(".picker-presets");
   const customContainer = container.querySelector(".picker-custom");
   const inputEl = customContainer ? customContainer.querySelector("input") : null;
+  
+  // Determine if this is a scoring picker (has custom-scores-container)
+  const isScorePicker = containerId === "score-picker";
 
   presetsEl.innerHTML = "";
   let buttons = [];
 
   // update UI and callback
   function selectValue(val) {
-    // Handle custom button selection
+    // Handle custom button selection differently for score picker vs dimension pickers
     if (val === 'custom') {
       buttons.forEach(btn => {
         btn.classList.toggle("active", btn.dataset.value === 'custom');
       });
-      if (customContainer) {
-        customContainer.classList.add("show");
-        if (inputEl) inputEl.focus();
+      
+      if (isScorePicker) {
+        // For score picker, just call onSelect immediately (it will handle showing custom input)
+        onSelect(val);
+      } else {
+        // For dimension pickers, show the custom input field
+        if (customContainer) {
+          customContainer.classList.add("show");
+          if (inputEl) inputEl.focus();
+        }
+        return; // Don't call onSelect yet, wait for input
       }
-      return; // Don't call onSelect yet, wait for input
     } else {
       // Hide custom input and update buttons
-      if (customContainer) customContainer.classList.remove("show");
+      if (customContainer && !isScorePicker) {
+        customContainer.classList.remove("show");
+      }
       buttons.forEach(btn =>
-        btn.classList.toggle("active", parseFloat(btn.dataset.value) === val)
+        btn.classList.toggle("active", btn.dataset.value === val || parseFloat(btn.dataset.value) === val)
       );
-      if (inputEl) inputEl.value = "";
+      if (inputEl && !isScorePicker) inputEl.value = "";
       onSelect(val);
     }
   }
@@ -78,16 +90,24 @@ function createPicker(containerId, presets, defaultValue, onSelect) {
   // create preset buttons
   presets.forEach(val => {
     const btn = document.createElement("button");
-    btn.textContent = val === 'custom' ? 'Custom Size' : val;
+    
+    // Handle button text and styling
+    if (val === 'custom') {
+      btn.textContent = isScorePicker ? 'Custom Score' : 'Custom Size';
+      btn.className = isScorePicker ? "picker-btn" : "picker-btn custom-btn";
+    } else {
+      btn.textContent = val;
+      btn.className = "picker-btn";
+    }
+    
     btn.dataset.value = val;
-    btn.className = val === 'custom' ? "picker-btn custom-btn" : "picker-btn";
     btn.addEventListener("click", () => selectValue(val));
     presetsEl.appendChild(btn);
     buttons.push(btn);
   });
 
-  // wire custom input if present
-  if (inputEl) {
+  // wire custom input if present (only for dimension pickers)
+  if (inputEl && !isScorePicker) {
     if (inputEl._listener) inputEl.removeEventListener("input", inputEl._listener);
     const listener = () => {
       const v = parseFloat(inputEl.value);
