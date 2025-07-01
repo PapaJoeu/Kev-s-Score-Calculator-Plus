@@ -3,12 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Kev's Scoring Calculator</title>
+  <title>Kev's Bitchin' Score Calculator</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="container">
     <h1 class="main-header">Kev's Scoring Calculator</h1>
+
+    <!-- TODO: Replace all step="0.001" with a value that isn't dumb like an 1/8 of an inch for gutters, an inch for sheets, and .25 inches for docs.  -->
 
     <!-- SHEET DIMENSIONS SECTION -->
     <section class="section" id="sheet-section">
@@ -47,6 +49,7 @@
     </section>
 
     <!-- SCORING TYPE SECTION -->
+     <!-- TODO: Replace dropdown with buttons for each of the choices bifold, trifold, gate, and custom. If custom is selected it dispalys the input container -->
     <section class="section" id="score-type-section">
       <h2 class="section-title">Scoring Type</h2>
       <select id="score-type"></select>
@@ -58,7 +61,7 @@
 
     <!-- CALCULATE BUTTON -->
     <section class="section" id="calculate-section">
-      <button class="calculate" onclick="runCalculator()">Calculate + Visualize</button>
+      <button class="calculate" onclick="runCalculator()">Calculate</button>
     </section>
 
     <!-- RESULTS SECTION -->
@@ -68,13 +71,16 @@
     </section>
 
     <!-- ADJUSTMENT CONTROLS -->
+     <!-- TODO: Center this section -->
     <section class="section" id="adjust-section">
       <button onclick="adjustScores(-CONFIG.adjustStep)">← 1/16″</button>
+      <!-- TODO: Update the current adjust so that it actually reflects the value -->
       <span id="adjust-display">Current Adjust: +0.000″</span>
       <button onclick="adjustScores(CONFIG.adjustStep)">→ 1/16″</button>
     </section>
 
     <!-- VISUALIZER -->
+     <!-- TODO: Move the visualizer below the calculate button -->
     <section class="section" id="visualizer-section">
       <canvas id="visualizer"></canvas>
     </section>
