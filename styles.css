@@ -106,6 +106,7 @@ button:active {
 
 .picker-btn.custom-btn.active {
   background-color: #1e7e34;
+  font-weight: 600;
 }
 
 .picker-btn:hover {

@@ -59,6 +59,9 @@ function createPicker(containerId, presets, defaultValue, onSelect) {
   function selectValue(val) {
     // Handle custom button selection differently for score picker vs dimension pickers
     if (val === 'custom') {
+      const customBtn = buttons.find(btn => btn.dataset.value === 'custom');
+      const isCurrentlyActive = customBtn && customBtn.classList.contains('active');
+      
       buttons.forEach(btn => {
         btn.classList.toggle("active", btn.dataset.value === 'custom');
       });
@@ -67,12 +70,24 @@ function createPicker(containerId, presets, defaultValue, onSelect) {
         // For score picker, just call onSelect immediately (it will handle showing custom input)
         onSelect(val);
       } else {
-        // For dimension pickers, show the custom input field
+        // For dimension pickers, toggle the custom input field visibility
         if (customContainer) {
-          customContainer.classList.add("show");
-          if (inputEl) inputEl.focus();
+          if (isCurrentlyActive) {
+            // If button was already active, hide the input (toggle off)
+            customContainer.classList.remove("show");
+            // Deactivate the button
+            buttons.forEach(btn => {
+              if (btn.dataset.value === 'custom') {
+                btn.classList.remove('active');
+              }
+            });
+          } else {
+            // Show the input field and focus it
+            customContainer.classList.add("show");
+            if (inputEl) inputEl.focus();
+          }
         }
-        return; // Don't call onSelect yet, wait for input
+        return; // Don't call onSelect for dimension pickers when toggling
       }
     } else {
       // Hide custom input and update buttons
@@ -94,7 +109,7 @@ function createPicker(containerId, presets, defaultValue, onSelect) {
     // Handle button text and styling
     if (val === 'custom') {
       btn.textContent = isScorePicker ? 'Custom Score' : 'Custom Size';
-      btn.className = isScorePicker ? "picker-btn" : "picker-btn custom-btn";
+      btn.className = "picker-btn custom-btn"; // Make both custom buttons green
     } else {
       btn.textContent = val;
       btn.className = "picker-btn";
