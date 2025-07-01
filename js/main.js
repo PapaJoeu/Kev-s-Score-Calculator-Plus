@@ -1,32 +1,42 @@
 // MAIN: controls the app's logic flow and event bindings
 
+// track last inputs for re-rendering on adjustments
+window._lastNup = 0;
+window._lastDocStarts = [];
+
 /**
  * Runs the calculator:
- * - Validates inputs
- * - Calculates positions
- * - Displays results + draws visualization
+ * 1. Validates inputs
+ * 2. Calculates positions
+ * 3. Initializes adjusted scores
+ * 4. Displays results + draws visualization
  */
 function runCalculator() {
+  // read configured values
   const pageLength = CONFIG.pageLength;
   const docLength = CONFIG.docLength;
+  const gutterSize = CONFIG.gutterSize;
+  const scoreType = CONFIG.scoreType;
+  const customScoresInput = document.getElementById("custom-scores").value.trim();
 
-  // Validate inputs
-  if (isNaN(pageLength) || pageLength <= 0 || isNaN(docLength) || docLength <= 0) {
-    alert("Please enter valid positive numbers for page length and document length.");
+  console.log('[runCalculator] Starting with config:', { pageLength, docLength, gutterSize, scoreType });
+
+  // input validation
+  if (isNaN(pageLength) || pageLength <= 0 ||
+      isNaN(docLength)  || docLength  <= 0) {
+    console.log('[runCalculator] Validation failed:', { pageLength, docLength });
+    alert("Please enter valid positive numbers for sheet and document lengths.");
     return;
   }
 
-  // Calculate how many documents fit
-  const maxDocs = calculateMaxDocuments(pageLength, docLength, CONFIG.gutterSize);
+  // calculate how many docs fit per sheet
+  const nUp = calculateMaxDocuments(pageLength, docLength, gutterSize);
 
-  // Get document start positions
-  const docStarts = calculateDocumentStartPositions(pageLength, docLength, maxDocs, CONFIG.gutterSize);
+  // calculate document start positions
+  const docStarts = calculateDocumentStartPositions(pageLength, docLength, nUp, gutterSize);
 
-  // Determine score positions based on scoring type
-  const scoreType = document.getElementById("score-type").value;
-  const customScoresInput = document.getElementById("custom-scores").value.trim();
+  // determine score positions based on scoring type
   let scorePositions = [];
-
   if (scoreType === "bifold") {
     scorePositions = calculateBifoldScores(docStarts, docLength);
   } else if (scoreType === "trifold") {
@@ -37,30 +47,62 @@ function runCalculator() {
     scorePositions = calculateCustomDocScores(docStarts, docLength, customScoresInput);
   }
 
-  // Display results and reset adjustments
-  displayResults(maxDocs, docStarts, scorePositions);
+  console.log('[runCalculator] Calculated scorePositions:', scorePositions);
 
-  // Draw canvas visualizer
+  // store last inputs for adjustments
+  window._lastNup = nUp;
+  window._lastDocStarts = [...docStarts];
+
+  // initialize adjusted positions
+  window.currentAdjustedScores = [...scorePositions];
+  window.lastScorePositions     = [...scorePositions];
+
+  console.log('[runCalculator] Initialized adjusted scores:', window.currentAdjustedScores);
+
+  // display results and visualization
+  displayResults(nUp, docStarts, scorePositions);
   drawVisualization(pageLength, docStarts, docLength, scorePositions);
 }
 
 /**
- * Adjusts scores by adding delta to current adjusted positions
- * @param {number} delta - amount to adjust (positive = right, negative = left)
+ * Adjusts current scores by delta and re-renders table/visuals.
+ * @param {number} delta amount to shift each score position
  */
 function adjustScores(delta) {
-  if (!currentAdjustedScores || currentAdjustedScores.length === 0) {
-    alert("Please calculate first before adjusting.");
-    return;
-  }
+  // Debug logging to understand the state
+  console.log('[adjustScores] checking state:', {
+    currentAdjustedScores: window.currentAdjustedScores,
+    length: window.currentAdjustedScores?.length,
+    lastNup: window._lastNup,
+    lastDocStarts: window._lastDocStarts
+  });
 
-  currentAdjustedScores = currentAdjustedScores.map(p => roundTo3(p + delta));
-  displayAdjustedResults(currentAdjustedScores);
+  // Check if we have valid adjusted scores to work with
+  if (!window.currentAdjustedScores || window.currentAdjustedScores.length === 0) {
+    console.log('[adjustScores] No adjusted scores available, trying to run calculator first');
+    // Try to run calculator first to initialize the scores
+    runCalculator();
+    // Check again after running calculator
+    if (!window.currentAdjustedScores || window.currentAdjustedScores.length === 0) {
+      alert("Please calculate first before adjusting. Make sure sheet and document lengths are valid positive numbers.");
+      return;
+    }
+  }
+  
+  console.log('[adjustScores] Applying delta:', delta);
+  // update adjusted scores
+  window.currentAdjustedScores = window.currentAdjustedScores.map(p => roundTo3(p + delta));
+  // re-display using last inputs and adjusted scores
+  displayResults(window._lastNup, window._lastDocStarts, window.currentAdjustedScores);
+  // redraw visualization with adjusted scores
+  const pageLength = CONFIG.pageLength;
+  const docLength = CONFIG.docLength;
+  drawVisualization(pageLength, window._lastDocStarts, docLength, window.currentAdjustedScores);
 }
 
 /**
- * Show/hide custom score input field
- * @param {string} value 
+ * Toggles visibility of custom-scores input.
+ * @param {string} value selected score type
  */
 function selectScoreType(value) {
   const customContainer = document.getElementById("custom-scores-container");

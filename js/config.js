@@ -1,48 +1,37 @@
-// Shared settings for the scoring calculator
-// All configurable values live here
+// Shared settings for Kev's Scoring Calculator
+// All configurable values for dynamic UI and calculations live here
+
 const CONFIG = {
-  gutterSize: 0.125,  // space between documents (inches)
-  adjustStep: 0.0625,  // manual adjustment step (1/16 in)
-  // column titles for results tables
-  tableHeaders: {
-    results: ["Type", "#", "Measurement (in)"],
-    adjusted: ["Adjusted #", "Measurement (in)"]
-  },
-  // dimensions for the drawing canvas
-  canvas: {
-    width: 600,
-    height: 100
-  },
-  
-  // default control values
-  pageLength: 18,            // default sheet length (inches)
-  docLength: 4,              // default document length (inches)
-  scoreType: 'bifold',       // default scoring type
-  
+  // default values for controls
+  pageLength: 18,             // default sheet length (inches)
+  docLength: 4,               // default document length (inches)
+  gutterSize: 0.125,          // default gutter size (inches)
+  scoreType: 'bifold',        // default scoring type
+  adjustStep: 0.0625,         // manual adjustment step (1/16 in)
+
   // preset values for dynamic UI generators
-  sheetPresets: [8.5, 11, 12, 13, 17, 18, 19, 26],
-  docPresets: [3.5, 4, 5, 5.5, 6, 8.5, 9, 11],
-  gutterPresets: [0.125, 0.25],
+  sheetPresets: [18, 19, 26],
+  docPresets: [4, 7, 8, 9, 10, 14],
+  gutterPresets: [0.125, 0.25, 0.5],
   scoreTypes: [
     { value: 'bifold',   label: 'Bifold'   },
     { value: 'trifold',  label: 'Trifold'  },
     { value: 'gatefold', label: 'Gate Fold'},
     { value: 'custom',   label: 'Custom'   }
   ],
-  // control metadata for free-form inputs
-  controls: {
-    pageLength: { label: 'Sheet Length',   id: 'page-length',   step: 0.001 },
-    docLength:  { label: 'Document Length', id: 'doc-length',    step: 0.001 },
-    gutter:     { label: 'Custom Gutter',   id: 'gutter-custom', step: 0.001 }
+
+  // table headers for result and adjusted score tables
+  tableHeaders: {
+    results: ['Type', '#', 'Measurement (in)'],
+    adjusted: ['Adjusted #', 'Measurement (in)']
+  },
+
+  // dimensions for the visualization canvas
+  canvas: {
+    width: 600,
+    height: 100
   }
 };
 
-// on page load, populate gutter input with default
-document.addEventListener("DOMContentLoaded", () => {
-  // find the gutter-size input element
-  const gutterDisplay = document.getElementById("gutter-display");
-  if (gutterDisplay) {
-    // apply the default gutter size to UI
-    gutterDisplay.value = CONFIG.gutterSize;
-  }
-});
+// Expose CONFIG globally
+window.CONFIG = CONFIG;

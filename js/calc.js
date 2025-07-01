@@ -5,13 +5,7 @@
  * Adds console.log tracing for easy debugging.
  */
 
-/**
- * Calculate the maximum number of documents that fit on a page.
- * @param {number} pageLength - Length of the page in units.
- * @param {number} docLength - Length of a single document in units.
- * @param {number} gutterSize - Space between documents (default from CONFIG).
- * @returns {number} The maximum number of docs that fit.
- */
+
 function calculateMaxDocuments(pageLength, docLength, gutterSize = CONFIG.gutterSize) {
   console.log('[calculateMaxDocuments] called with', { pageLength, docLength, gutterSize });
   const max = Math.floor((pageLength + gutterSize) / (docLength + gutterSize));
