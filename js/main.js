@@ -23,7 +23,7 @@ function runCalculator() {
   const docStarts = calculateDocumentStartPositions(pageLength, docLength, maxDocs, CONFIG.gutterSize);
 
   // Determine score positions based on scoring type
-  const scoreType = document.getElementById("score-type").value;
+  const scoreType = CONFIG.scoreType;
   const customScoresInput = document.getElementById("custom-scores").value.trim();
   let scorePositions = [];
 

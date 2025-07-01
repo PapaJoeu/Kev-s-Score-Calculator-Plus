@@ -71,6 +71,28 @@ button:active {
   background-color: #00408d;
 }
 
+/* Picker button styles */
+.picker-btn {
+  flex: 1;
+  padding: 10px;
+  font-size: 14px;
+  background-color: #007bff;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.picker-btn:hover {
+  background-color: #0056b3;
+}
+
+.picker-btn.active {
+  background-color: #0056b3;
+  font-weight: 600;
+}
+
 /* Preset button grid */
 .button-grid {
   display: grid;
@@ -96,46 +118,6 @@ button.calculate:active {
 button.selected {
   background-color: #0056b3;
   font-weight: 600;
-}
-
-/* ==========================================
-   GUTTER PICKER STYLES
-   ========================================== */
-.gutter-picker {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.gutter-btn {
-  flex: 1;
-  padding: 10px;
-  font-size: 14px;
-  background-color: #007bff;
-  border: none;
-  border-radius: 6px;
-  color: #fff;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.gutter-btn:hover {
-  background-color: #0056b3;
-}
-
-.gutter-btn.active {
-  background-color: #0056b3;
-  font-weight: 600;
-}
-
-/* Custom input field in gutter picker */
-#gutter-custom {
-  width: 80px;
-  padding: 8px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  box-sizing: border-box;
 }
 
 /* ==========================================

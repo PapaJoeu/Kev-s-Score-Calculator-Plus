@@ -1,10 +1,9 @@
-// UI module for Kev's Scoring Calculator
+// UI logic for Kev's Scoring Calculator
 
-// -- Display Results ------------------------------------------------
-// Show main results: N-up, start positions, score positions
+// show main results
 function displayResults(nUp, docStarts, scorePositions) {
-  lastScorePositions = [...scorePositions];
-  currentAdjustedScores = [...scorePositions];
+  window.lastScorePositions = [...scorePositions];
+  window.currentAdjustedScores = [...scorePositions];
   clearAdjustedResults();
 
   const container = document.getElementById("results");
@@ -14,7 +13,7 @@ function displayResults(nUp, docStarts, scorePositions) {
   container.innerHTML = html;
 }
 
-// Show adjusted score positions
+// show adjusted scores
 function displayAdjustedResults(adjustedScores) {
   const container = document.getElementById("adjusted-results");
   let html = `<div><strong>Adjusted Scores</strong></div>`;
@@ -22,16 +21,15 @@ function displayAdjustedResults(adjustedScores) {
   container.innerHTML = html;
 }
 
-// Clear adjusted results
+// clear adjusted area
 function clearAdjustedResults() {
   document.getElementById("adjusted-results").innerHTML = "";
 }
 
-// -- Table Builders -------------------------------------------------
-// Build table for document start positions
+// table builders
 function buildDocStartTable(docStarts) {
   let rows = `<table>
-    <tr><th>#</th><th>Document Start (in)</th></tr>`;
+    <tr><th>#</th><th>Doc Start (in)</th></tr>`;
   docStarts.forEach((pos, i) => {
     rows += `<tr><td>${i + 1}</td><td>${pos.toFixed(3)}</td></tr>`;
   });
@@ -39,10 +37,9 @@ function buildDocStartTable(docStarts) {
   return rows;
 }
 
-// Build table for score positions
 function buildScoreTable(scorePositions) {
   let rows = `<table>
-    <tr><th>#</th><th>Score Position (in)</th></tr>`;
+    <tr><th>#</th><th>Score Pos (in)</th></tr>`;
   scorePositions.forEach((pos, i) => {
     rows += `<tr><td>${i + 1}</td><td>${pos.toFixed(3)}</td></tr>`;
   });
@@ -50,10 +47,9 @@ function buildScoreTable(scorePositions) {
   return rows;
 }
 
-// Build table for adjusted scores
 function buildAdjustedTable(adjustedScores) {
   let rows = `<table>
-    <tr><th>Adjusted #</th><th>Measurement (in)</th></tr>`;
+    <tr><th>#</th><th>Adjusted (in)</th></tr>`;
   adjustedScores.forEach((pos, i) => {
     rows += `<tr><td>${i + 1}</td><td>${pos.toFixed(3)}</td></tr>`;
   });
@@ -61,116 +57,80 @@ function buildAdjustedTable(adjustedScores) {
   return rows;
 }
 
-// -- Picker and Input Generators -----------------------------------
-// Create a group of preset buttons with optional custom input
+// generic picker: buttons + custom input
 function createPicker(containerId, presets, defaultValue, onSelect) {
   const container = document.getElementById(containerId);
-  const presetsContainer = container.querySelector('.picker-presets');
-  const customContainer = container.querySelector('.picker-custom');
-  const input = customContainer.querySelector('input');
+  const presetsEl = container.querySelector(".picker-presets");
+  const customContainer = container.querySelector(".picker-custom");
+  const inputEl = customContainer ? customContainer.querySelector("input") : null;
 
-  // clear existing
-  presetsContainer.innerHTML = '';
+  presetsEl.innerHTML = "";
   let buttons = [];
 
-  // helper to update UI and call onSelect
+  // update UI and callback
   function selectValue(val) {
-    // toggle button active states
-    buttons.forEach(btn => {
-      btn.classList.toggle('active', parseFloat(btn.dataset.value) === val);
-    });
-    // update custom input: clear if preset, else show value
+    buttons.forEach(btn => btn.classList.toggle("active", parseFloat(btn.dataset.value) === val));
     const isPreset = buttons.some(btn => parseFloat(btn.dataset.value) === val);
-    input.value = isPreset ? '' : val;
-    // invoke callback
+    if (inputEl) {
+      inputEl.value = isPreset ? "" : val;
+    }
     onSelect(val);
   }
 
-  // create preset buttons
+  // make preset buttons
   presets.forEach(val => {
-    const btn = document.createElement('button');
+    const btn = document.createElement("button");
     btn.textContent = val;
     btn.dataset.value = val;
-    btn.className = 'picker-btn';
-    btn.addEventListener('click', () => selectValue(val));
-    presetsContainer.appendChild(btn);
+    btn.className = "picker-btn";
+    btn.addEventListener("click", () => selectValue(val));
+    presetsEl.appendChild(btn);
     buttons.push(btn);
   });
 
-  // wire custom input
-  if (input._listener) input.removeEventListener('input', input._listener);
-  const listener = () => {
-    const v = parseFloat(input.value);
-    if (!isNaN(v)) selectValue(v);
-  };
-  input.addEventListener('input', listener);
-  input._listener = listener;
+  // custom input listener
+  if (inputEl) {
+    if (inputEl._listener) inputEl.removeEventListener("input", inputEl._listener);
+    const listener = () => {
+      const v = parseFloat(inputEl.value);
+      if (!isNaN(v)) selectValue(v);
+    };
+    inputEl.addEventListener("input", listener);
+    inputEl._listener = listener;
+  }
 
-  // initialize with default
+  // initialize
   selectValue(defaultValue);
 }
 
-// Fill a dropdown <select> element
-function createDropdown(selectId, options, defaultValue, onChange) {
-  const select = document.getElementById(selectId);
-  select.innerHTML = '';
-  options.forEach(opt => {
-    const option = document.createElement('option');
-    option.value = opt.value;
-    option.text = opt.label;
-    select.appendChild(option);
-  });
-  select.value = defaultValue;
-  select.addEventListener('change', () => onChange(select.value));
-}
-
-// Generate labeled inputs for free-form values
-function createInputs(containerId, controlsMap, onInput) {
-  const container = document.getElementById(containerId);
-  container.innerHTML = '';
-  Object.keys(controlsMap).forEach(key => {
-    const cfg = controlsMap[key];
-    const label = document.createElement('label');
-    label.textContent = cfg.label;
-    const input = document.createElement('input');
-    input.id = cfg.id;
-    input.type = 'number';
-    input.step = cfg.step;
-    input.value = CONFIG[key];
-    input.addEventListener('input', () => {
-      const v = parseFloat(input.value);
-      if (!isNaN(v)) onInput(key, v);
-    });
-    label.appendChild(input);
-    container.appendChild(label);
-  });
-}
-
-// -- Initialization ------------------------------------------------- 
-document.addEventListener('DOMContentLoaded', () => {
-  // result state vars
+// setup pickers
+document.addEventListener("DOMContentLoaded", () => {
   window.lastScorePositions = [];
   window.currentAdjustedScores = [];
 
-  // generate pickers and inputs
-  createPicker('sheet-picker', CONFIG.sheetPresets, CONFIG.pageLength, val => {
+  createPicker("sheet-picker", CONFIG.sheetPresets, CONFIG.pageLength, val => {
     CONFIG.pageLength = val;
     runCalculator();
   });
-  createPicker('doc-picker', CONFIG.docPresets, CONFIG.docLength, val => {
+
+  createPicker("doc-picker", CONFIG.docPresets, CONFIG.docLength, val => {
     CONFIG.docLength = val;
     runCalculator();
   });
-  createPicker('gutter-picker', CONFIG.gutterPresets, CONFIG.gutterSize, val => {
+
+  createPicker("gutter-picker", CONFIG.gutterPresets, CONFIG.gutterSize, val => {
     CONFIG.gutterSize = val;
     runCalculator();
   });
-  createDropdown('score-type', CONFIG.scoreTypes, CONFIG.scoreType, val => {
-    selectScoreType(val);
-    runCalculator();
-  });
-  createInputs('controls-container', CONFIG.controls, (key, val) => {
-    CONFIG[key] = val;
-    runCalculator();
-  });
+
+  createPicker(
+    "score-picker",
+    CONFIG.scoreTypes.map(opt => opt.value),
+    CONFIG.scoreType,
+    val => {
+      CONFIG.scoreType = val;
+      selectScoreType(val);
+      runCalculator();
+    }
+  );
 });
