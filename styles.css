@@ -139,6 +139,35 @@ button.selected {
 }
 
 /* ==========================================
+   PICKER LAYOUT
+   ========================================== */
+.picker-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.picker-presets .picker-btn {
+  flex: 1 1 calc(33.333% - 8px);
+  box-sizing: border-box;
+}
+
+.picker-custom {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.picker-custom label {
+  min-width: 60px;
+  margin-right: 8px;
+}
+
+.picker-custom input {
+  flex: 1;
+}
+
+/* ==========================================
    INPUTS + SELECTS
    ========================================== */
 
