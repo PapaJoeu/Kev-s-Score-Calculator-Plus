@@ -1,5 +1,6 @@
 // UI logic for Kev's Scoring Calculator
 
+/* ======== RESULTS DISPLAY FUNCTIONS ======== */
 // show main results
 function displayResults(nUp, docStarts, scorePositions) {
   window.lastScorePositions = [...scorePositions];
@@ -21,43 +22,37 @@ function displayAdjustedResults(adjustedScores) {
   container.innerHTML = html;
 }
 
-// clear adjusted area
+// clear adjusted scores area
 function clearAdjustedResults() {
   document.getElementById("adjusted-results").innerHTML = "";
 }
 
-// table builders
-function buildDocStartTable(docStarts) {
-  let rows = `<table>
-    <tr><th>#</th><th>Doc Start (in)</th></tr>`;
-  docStarts.forEach((pos, i) => {
-    rows += `<tr><td>${i + 1}</td><td>${pos.toFixed(3)}</td></tr>`;
+/* ======== TABLE BUILDERS ======== */
+// generic table generator
+function buildTable(headers, dataRows) {
+  let html = `<table><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr>`;
+  dataRows.forEach((val, i) => {
+    html += `<tr><td>${i + 1}</td><td>${val.toFixed(3)}</td></tr>`;
   });
-  rows += `</table>`;
-  return rows;
+  html += `</table>`;
+  return html;
 }
 
-function buildScoreTable(scorePositions) {
-  let rows = `<table>
-    <tr><th>#</th><th>Score Pos (in)</th></tr>`;
-  scorePositions.forEach((pos, i) => {
-    rows += `<tr><td>${i + 1}</td><td>${pos.toFixed(3)}</td></tr>`;
-  });
-  rows += `</table>`;
-  return rows;
+// specialized table wrappers
+function buildDocStartTable(data) {
+  return buildTable(['#', 'Doc Start (in)'], data);
 }
 
-function buildAdjustedTable(adjustedScores) {
-  let rows = `<table>
-    <tr><th>#</th><th>Adjusted (in)</th></tr>`;
-  adjustedScores.forEach((pos, i) => {
-    rows += `<tr><td>${i + 1}</td><td>${pos.toFixed(3)}</td></tr>`;
-  });
-  rows += `</table>`;
-  return rows;
+function buildScoreTable(data) {
+  return buildTable(['#', 'Score Pos (in)'], data);
 }
 
-// generic picker: buttons + custom input
+function buildAdjustedTable(data) {
+  return buildTable(['#', 'Adjusted (in)'], data);
+}
+
+/* ======== PICKER GENERATOR ======== */
+// generic picker: buttons + optional custom input
 function createPicker(containerId, presets, defaultValue, onSelect) {
   const container = document.getElementById(containerId);
   const presetsEl = container.querySelector(".picker-presets");
@@ -69,15 +64,15 @@ function createPicker(containerId, presets, defaultValue, onSelect) {
 
   // update UI and callback
   function selectValue(val) {
-    buttons.forEach(btn => btn.classList.toggle("active", parseFloat(btn.dataset.value) === val));
+    buttons.forEach(btn =>
+      btn.classList.toggle("active", parseFloat(btn.dataset.value) === val)
+    );
     const isPreset = buttons.some(btn => parseFloat(btn.dataset.value) === val);
-    if (inputEl) {
-      inputEl.value = isPreset ? "" : val;
-    }
+    if (inputEl) inputEl.value = isPreset ? "" : val;
     onSelect(val);
   }
 
-  // make preset buttons
+  // create preset buttons
   presets.forEach(val => {
     const btn = document.createElement("button");
     btn.textContent = val;
@@ -88,7 +83,7 @@ function createPicker(containerId, presets, defaultValue, onSelect) {
     buttons.push(btn);
   });
 
-  // custom input listener
+  // wire custom input if present
   if (inputEl) {
     if (inputEl._listener) inputEl.removeEventListener("input", inputEl._listener);
     const listener = () => {
@@ -99,29 +94,44 @@ function createPicker(containerId, presets, defaultValue, onSelect) {
     inputEl._listener = listener;
   }
 
-  // initialize
+  // initialize with default
   selectValue(defaultValue);
 }
 
-// setup pickers
+/* ======== INITIALIZATION ======== */
 document.addEventListener("DOMContentLoaded", () => {
   window.lastScorePositions = [];
   window.currentAdjustedScores = [];
 
-  createPicker("sheet-picker", CONFIG.sheetPresets, CONFIG.pageLength, val => {
-    CONFIG.pageLength = val;
-    runCalculator();
-  });
+  createPicker(
+    "sheet-picker",
+    CONFIG.sheetPresets,
+    CONFIG.pageLength,
+    val => {
+      CONFIG.pageLength = val;
+      runCalculator();
+    }
+  );
 
-  createPicker("doc-picker", CONFIG.docPresets, CONFIG.docLength, val => {
-    CONFIG.docLength = val;
-    runCalculator();
-  });
+  createPicker(
+    "doc-picker",
+    CONFIG.docPresets,
+    CONFIG.docLength,
+    val => {
+      CONFIG.docLength = val;
+      runCalculator();
+    }
+  );
 
-  createPicker("gutter-picker", CONFIG.gutterPresets, CONFIG.gutterSize, val => {
-    CONFIG.gutterSize = val;
-    runCalculator();
-  });
+  createPicker(
+    "gutter-picker",
+    CONFIG.gutterPresets,
+    CONFIG.gutterSize,
+    val => {
+      CONFIG.gutterSize = val;
+      runCalculator();
+    }
+  );
 
   createPicker(
     "score-picker",
