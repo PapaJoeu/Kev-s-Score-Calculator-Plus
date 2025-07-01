@@ -1,30 +1,28 @@
 // UI logic for Kev's Scoring Calculator
 
+// build combined scores table with original and adjusted values
+function buildCombinedScoreTable(orig, adjusted) {
+  let html = `<table><tr><th>#</th><th>Score Pos (in)</th><th>Adjusted Score (in)</th></tr>`;
+  orig.forEach((pos, i) => {
+    const adj = adjusted[i] !== undefined ? adjusted[i].toFixed(3) : '';
+    html += `<tr><td>${i + 1}</td><td>${pos.toFixed(3)}</td><td>${adj}</td></tr>`;
+  });
+  html += `</table>`;
+  return html;
+}
+
 /* ======== RESULTS DISPLAY FUNCTIONS ======== */
 // show main results
 function displayResults(nUp, docStarts, scorePositions) {
   window.lastScorePositions = [...scorePositions];
-  window.currentAdjustedScores = [...scorePositions];
-  clearAdjustedResults();
-
-  const container = document.getElementById("results");
+  // render combined scores table
+  const resultsEl = document.getElementById("results");
   let html = `<div><strong>N-up:</strong> ${nUp}</div>`;
-  html += buildDocStartTable(docStarts);
-  html += buildScoreTable(scorePositions);
-  container.innerHTML = html;
-}
-
-// show adjusted scores
-function displayAdjustedResults(adjustedScores) {
-  const container = document.getElementById("adjusted-results");
-  let html = `<div><strong>Adjusted Scores</strong></div>`;
-  html += buildAdjustedTable(adjustedScores);
-  container.innerHTML = html;
-}
-
-// clear adjusted scores area
-function clearAdjustedResults() {
-  document.getElementById("adjusted-results").innerHTML = "";
+  html += buildCombinedScoreTable(scorePositions, window.currentAdjustedScores);
+  resultsEl.innerHTML = html;
+  // render doc start positions below
+  const docEl = document.getElementById("doc-starts");
+  docEl.innerHTML = buildDocStartTable(docStarts);
 }
 
 /* ======== TABLE BUILDERS ======== */
@@ -41,14 +39,6 @@ function buildTable(headers, dataRows) {
 // specialized table wrappers
 function buildDocStartTable(data) {
   return buildTable(['#', 'Doc Start (in)'], data);
-}
-
-function buildScoreTable(data) {
-  return buildTable(['#', 'Score Pos (in)'], data);
-}
-
-function buildAdjustedTable(data) {
-  return buildTable(['#', 'Adjusted (in)'], data);
 }
 
 /* ======== PICKER GENERATOR ======== */

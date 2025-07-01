@@ -67,7 +67,7 @@
 
     <!-- Calculate Button & Visualization -->
     <section class="section" id="calculate-section">
-      <button class="calculate" onclick="runCalculator()">Calculate</button>
+      <button class="calculate" onclick="runCalculator()">Calculate + Visualize</button>
     </section>
     <section class="section" id="visualizer-section">
       <canvas id="visualizer"></canvas>
@@ -76,14 +76,13 @@
     <!-- Results Display -->
     <section class="section" id="results-section">
       <div id="results"></div>
-      <div id="adjusted-results"></div>
+      <div id="doc-starts"></div>
     </section>
 
     <!-- Adjustment Controls -->
     <section class="section" id="adjust-section" style="text-align: center;">
       <button onclick="adjustScores(-CONFIG.adjustStep)">← 1/16″</button>
-      <!-- TODO: Make the current adjust value change depending on the actual adjustments -->
-      <span id="adjust-display">Current Adjust:</span>
+      <span id="adjust-display">Current Adjust: +0.000″</span>
       <button onclick="adjustScores(CONFIG.adjustStep)">→ 1/16″</button>
     </section>
   </div>

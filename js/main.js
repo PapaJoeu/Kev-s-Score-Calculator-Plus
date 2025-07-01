@@ -1,32 +1,39 @@
 // MAIN: controls the app's logic flow and event bindings
 
+// track last inputs for re-rendering on adjustments
+window._lastNup = 0;
+window._lastDocStarts = [];
+
 /**
  * Runs the calculator:
- * - Validates inputs
- * - Calculates positions
- * - Displays results + draws visualization
+ * 1. Validates inputs
+ * 2. Calculates positions
+ * 3. Initializes adjusted scores
+ * 4. Displays results + draws visualization
  */
 function runCalculator() {
+  // read configured values
   const pageLength = CONFIG.pageLength;
   const docLength = CONFIG.docLength;
+  const gutterSize = CONFIG.gutterSize;
+  const scoreType = CONFIG.scoreType;
+  const customScoresInput = document.getElementById("custom-scores").value.trim();
 
-  // Validate inputs
-  if (isNaN(pageLength) || pageLength <= 0 || isNaN(docLength) || docLength <= 0) {
-    alert("Please enter valid positive numbers for page length and document length.");
+  // input validation
+  if (isNaN(pageLength) || pageLength <= 0 ||
+      isNaN(docLength)  || docLength  <= 0) {
+    alert("Please enter valid positive numbers for sheet and document lengths.");
     return;
   }
 
-  // Calculate how many documents fit
-  const maxDocs = calculateMaxDocuments(pageLength, docLength, CONFIG.gutterSize);
+  // calculate how many docs fit per sheet
+  const nUp = calculateMaxDocuments(pageLength, docLength, gutterSize);
 
-  // Get document start positions
-  const docStarts = calculateDocumentStartPositions(pageLength, docLength, maxDocs, CONFIG.gutterSize);
+  // calculate document start positions
+  const docStarts = calculateDocumentStartPositions(pageLength, docLength, nUp, gutterSize);
 
-  // Determine score positions based on scoring type
-  const scoreType = CONFIG.scoreType;
-  const customScoresInput = document.getElementById("custom-scores").value.trim();
+  // determine score positions based on scoring type
   let scorePositions = [];
-
   if (scoreType === "bifold") {
     scorePositions = calculateBifoldScores(docStarts, docLength);
   } else if (scoreType === "trifold") {
@@ -37,30 +44,38 @@ function runCalculator() {
     scorePositions = calculateCustomDocScores(docStarts, docLength, customScoresInput);
   }
 
-  // Display results and reset adjustments
-  displayResults(maxDocs, docStarts, scorePositions);
+  // store last inputs for adjustments
+  window._lastNup = nUp;
+  window._lastDocStarts = [...docStarts];
 
-  // Draw canvas visualizer
+  // initialize adjusted positions
+  window.currentAdjustedScores = [...scorePositions];
+  window.lastScorePositions     = [...scorePositions];
+
+  // display results and visualization
+  displayResults(nUp, docStarts, scorePositions);
   drawVisualization(pageLength, docStarts, docLength, scorePositions);
 }
 
 /**
- * Adjusts scores by adding delta to current adjusted positions
- * @param {number} delta - amount to adjust (positive = right, negative = left)
+ * Adjusts current scores by delta and re-renders table/visuals.
+ * @param {number} delta amount to shift each score position
  */
 function adjustScores(delta) {
-  if (!currentAdjustedScores || currentAdjustedScores.length === 0) {
+  if (!window.currentAdjustedScores?.length) {
     alert("Please calculate first before adjusting.");
     return;
   }
-
-  currentAdjustedScores = currentAdjustedScores.map(p => roundTo3(p + delta));
-  displayAdjustedResults(currentAdjustedScores);
+  // update adjusted scores
+  window.currentAdjustedScores = window.currentAdjustedScores.map(p => roundTo3(p + delta));
+  // re-display using last inputs
+  displayResults(window._lastNup, window._lastDocStarts, window.lastScorePositions);
+  // redraw visualization with new adjusted scores does not change viz positions
 }
 
 /**
- * Show/hide custom score input field
- * @param {string} value 
+ * Toggles visibility of custom-scores input.
+ * @param {string} value selected score type
  */
 function selectScoreType(value) {
   const customContainer = document.getElementById("custom-scores-container");
