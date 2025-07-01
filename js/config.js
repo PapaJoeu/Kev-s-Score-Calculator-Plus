@@ -6,6 +6,7 @@ const CONFIG = {
   pageLength: 18,             // default sheet length (inches)
   docLength: 4,               // default document length (inches)
   gutterSize: 0.125,          // default gutter size (inches)
+  scoreType: 'bifold',        // default scoring type
   adjustStep: 0.0625,         // manual adjustment step (1/16 in)
 
   // preset values for dynamic UI generators

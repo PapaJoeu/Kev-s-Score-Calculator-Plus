@@ -19,9 +19,12 @@ function runCalculator() {
   const scoreType = CONFIG.scoreType;
   const customScoresInput = document.getElementById("custom-scores").value.trim();
 
+  console.log('[runCalculator] Starting with config:', { pageLength, docLength, gutterSize, scoreType });
+
   // input validation
   if (isNaN(pageLength) || pageLength <= 0 ||
       isNaN(docLength)  || docLength  <= 0) {
+    console.log('[runCalculator] Validation failed:', { pageLength, docLength });
     alert("Please enter valid positive numbers for sheet and document lengths.");
     return;
   }
@@ -44,6 +47,8 @@ function runCalculator() {
     scorePositions = calculateCustomDocScores(docStarts, docLength, customScoresInput);
   }
 
+  console.log('[runCalculator] Calculated scorePositions:', scorePositions);
+
   // store last inputs for adjustments
   window._lastNup = nUp;
   window._lastDocStarts = [...docStarts];
@@ -51,6 +56,8 @@ function runCalculator() {
   // initialize adjusted positions
   window.currentAdjustedScores = [...scorePositions];
   window.lastScorePositions     = [...scorePositions];
+
+  console.log('[runCalculator] Initialized adjusted scores:', window.currentAdjustedScores);
 
   // display results and visualization
   displayResults(nUp, docStarts, scorePositions);
@@ -62,15 +69,35 @@ function runCalculator() {
  * @param {number} delta amount to shift each score position
  */
 function adjustScores(delta) {
-  if (!window.currentAdjustedScores?.length) {
-    alert("Please calculate first before adjusting.");
-    return;
+  // Debug logging to understand the state
+  console.log('[adjustScores] checking state:', {
+    currentAdjustedScores: window.currentAdjustedScores,
+    length: window.currentAdjustedScores?.length,
+    lastNup: window._lastNup,
+    lastDocStarts: window._lastDocStarts
+  });
+
+  // Check if we have valid adjusted scores to work with
+  if (!window.currentAdjustedScores || window.currentAdjustedScores.length === 0) {
+    console.log('[adjustScores] No adjusted scores available, trying to run calculator first');
+    // Try to run calculator first to initialize the scores
+    runCalculator();
+    // Check again after running calculator
+    if (!window.currentAdjustedScores || window.currentAdjustedScores.length === 0) {
+      alert("Please calculate first before adjusting. Make sure sheet and document lengths are valid positive numbers.");
+      return;
+    }
   }
+  
+  console.log('[adjustScores] Applying delta:', delta);
   // update adjusted scores
   window.currentAdjustedScores = window.currentAdjustedScores.map(p => roundTo3(p + delta));
-  // re-display using last inputs
-  displayResults(window._lastNup, window._lastDocStarts, window.lastScorePositions);
-  // redraw visualization with new adjusted scores does not change viz positions
+  // re-display using last inputs and adjusted scores
+  displayResults(window._lastNup, window._lastDocStarts, window.currentAdjustedScores);
+  // redraw visualization with adjusted scores
+  const pageLength = CONFIG.pageLength;
+  const docLength = CONFIG.docLength;
+  drawVisualization(pageLength, window._lastDocStarts, docLength, window.currentAdjustedScores);
 }
 
 /**
