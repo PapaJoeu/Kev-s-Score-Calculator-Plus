@@ -65,26 +65,36 @@ function buildAdjustedTable(adjustedScores) {
 // Create a group of preset buttons with optional custom input
 function createPicker(containerId, presets, defaultValue, onSelect) {
   const container = document.getElementById(containerId);
-  container.innerHTML = ''; // clear existing
+  const presetsContainer = container.querySelector('.picker-presets');
+  const customContainer = container.querySelector('.picker-custom');
+
+  // clear existing buttons
+  presetsContainer.innerHTML = '';
+
+  // add preset buttons
   presets.forEach(val => {
     const btn = document.createElement('button');
     btn.textContent = val;
     btn.dataset.value = val;
     btn.className = 'picker-btn';
     btn.addEventListener('click', () => onSelect(val));
-    container.appendChild(btn);
+    presetsContainer.appendChild(btn);
   });
-  // custom field
-  const input = document.createElement('input');
-  input.type = 'number';
-  input.step = '0.001';
-  input.placeholder = 'Custom';
-  input.addEventListener('input', () => {
+
+  // setup custom input
+  const input = customContainer.querySelector('input');
+  input.value = '';
+  if (input._listener) {
+    input.removeEventListener('input', input._listener);
+  }
+  const listener = () => {
     const v = parseFloat(input.value);
     if (!isNaN(v)) onSelect(v);
-  });
-  container.appendChild(input);
-  // initialize selection state
+  };
+  input.addEventListener('input', listener);
+  input._listener = listener;
+
+  // initialize selection
   onSelect(defaultValue);
 }
 
