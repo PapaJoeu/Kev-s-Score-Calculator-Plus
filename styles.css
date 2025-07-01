@@ -30,18 +30,22 @@ body {
   font-weight: 700;
   text-align: center;
   color: #007bff;
-  margin-bottom: 16px;
-}
-
-.section {
   margin-bottom: 24px;
 }
 
+.section {
+  margin-bottom: 32px;
+}
+
 .section-title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #444;
-  margin-bottom: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 4px;
 }
 
 /* ==========================================
@@ -123,30 +127,56 @@ button.selected {
 /* ==========================================
    PICKER LAYOUT
    ========================================== */
+.picker {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 16px;
+}
+
 .picker-presets {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  margin-bottom: 12px;
 }
 
 .picker-presets .picker-btn {
-  flex: 1 1 calc(33.333% - 8px);
+  flex: 1 1 calc(50% - 4px);
+  min-width: 80px;
   box-sizing: border-box;
 }
 
 .picker-custom {
   display: flex;
   align-items: center;
-  margin-top: 8px;
+  background: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 4px;
 }
 
 .picker-custom label {
-  min-width: 60px;
-  margin-right: 8px;
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #495057;
+  background: #f8f9fa;
+  border-radius: 4px;
+  margin-right: 4px;
+  text-align: center;
+  white-space: nowrap;
 }
 
 .picker-custom input {
   flex: 1;
+  margin: 0;
+  border: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+  background: #fff;
 }
 
 /* ==========================================
@@ -162,6 +192,17 @@ input, select {
   margin-top: 4px;
   margin-bottom: 12px;
   box-sizing: border-box;
+}
+
+/* Picker custom inputs have their own styling */
+.picker-custom input {
+  width: auto;
+  margin: 0;
+  border: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+  background: #fff;
 }
 
 input[disabled] {
@@ -376,11 +417,10 @@ button.calculate:active {
 }
 
 /* ==========================================
-   INPUTS & SELECTS
+   INPUTS & SELECTS (CONSOLIDATED)
    ========================================== */
 input,
-select,
-.picker-custom input {
+select {
   width: 100%;
   padding: 12px;
   font-size: 16px;
@@ -388,6 +428,18 @@ select,
   border-radius: 6px;
   margin-top: 4px;
   margin-bottom: 12px;
+  box-sizing: border-box;
+}
+
+/* Picker custom inputs have special styling within their container */
+.picker-custom input {
+  width: auto !important;
+  margin: 0 !important;
+  border: none !important;
+  padding: 8px 12px !important;
+  font-size: 14px !important;
+  border-radius: 4px !important;
+  background: #fff !important;
 }
 
 input[disabled] {
@@ -396,35 +448,64 @@ input[disabled] {
 }
 
 /* ==========================================
-   PICKER LAYOUT
+   PICKER LAYOUT (CONSOLIDATED)
    ========================================== */
 .picker {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 16px;
   margin-top: 8px;
 }
 
 .picker-presets {
   display: flex;
   flex-wrap: wrap;
-  margin-bottom: 8px;
+  gap: 8px;
+  margin-bottom: 12px;
 }
 
 .picker-presets .picker-btn {
-  flex: 1 1 calc(33.333% - 8px);
-  margin: 4px;
+  flex: 1 1 calc(50% - 4px);
+  min-width: 80px;
+  margin: 0;
   padding: 10px;
   text-align: center;
+  box-sizing: border-box;
 }
 
 /* Custom input wrapper */
 .picker-custom {
   display: flex;
   align-items: center;
+  background: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 4px;
 }
 
 .picker-custom label {
-  min-width: 120px;
-  margin-right: 8px;
+  flex: 1;
+  padding: 8px 12px;
   font-size: 14px;
+  font-weight: 500;
+  color: #495057;
+  background: #f8f9fa;
+  border-radius: 4px;
+  margin-right: 4px;
+  text-align: center;
+  white-space: nowrap;
+  min-width: calc(50% - 4px);
+}
+
+.picker-custom input {
+  flex: 1;
+  margin: 0;
+  border: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+  background: #fff;
 }
 
 /* ==========================================
