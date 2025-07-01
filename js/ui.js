@@ -54,20 +54,33 @@ function createPicker(containerId, presets, defaultValue, onSelect) {
 
   // update UI and callback
   function selectValue(val) {
-    buttons.forEach(btn =>
-      btn.classList.toggle("active", parseFloat(btn.dataset.value) === val)
-    );
-    const isPreset = buttons.some(btn => parseFloat(btn.dataset.value) === val);
-    if (inputEl) inputEl.value = isPreset ? "" : val;
-    onSelect(val);
+    // Handle custom button selection
+    if (val === 'custom') {
+      buttons.forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.value === 'custom');
+      });
+      if (customContainer) {
+        customContainer.classList.add("show");
+        if (inputEl) inputEl.focus();
+      }
+      return; // Don't call onSelect yet, wait for input
+    } else {
+      // Hide custom input and update buttons
+      if (customContainer) customContainer.classList.remove("show");
+      buttons.forEach(btn =>
+        btn.classList.toggle("active", parseFloat(btn.dataset.value) === val)
+      );
+      if (inputEl) inputEl.value = "";
+      onSelect(val);
+    }
   }
 
   // create preset buttons
   presets.forEach(val => {
     const btn = document.createElement("button");
-    btn.textContent = val;
+    btn.textContent = val === 'custom' ? 'Custom Size' : val;
     btn.dataset.value = val;
-    btn.className = "picker-btn";
+    btn.className = val === 'custom' ? "picker-btn custom-btn" : "picker-btn";
     btn.addEventListener("click", () => selectValue(val));
     presetsEl.appendChild(btn);
     buttons.push(btn);
@@ -78,7 +91,13 @@ function createPicker(containerId, presets, defaultValue, onSelect) {
     if (inputEl._listener) inputEl.removeEventListener("input", inputEl._listener);
     const listener = () => {
       const v = parseFloat(inputEl.value);
-      if (!isNaN(v)) selectValue(v);
+      if (!isNaN(v)) {
+        // Mark custom button as active and call onSelect
+        buttons.forEach(btn => {
+          btn.classList.toggle("active", btn.dataset.value === 'custom');
+        });
+        onSelect(v);
+      }
     };
     inputEl.addEventListener("input", listener);
     inputEl._listener = listener;

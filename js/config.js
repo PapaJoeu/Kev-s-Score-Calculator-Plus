@@ -10,9 +10,9 @@ const CONFIG = {
   adjustStep: 0.0625,         // manual adjustment step (1/16 in)
 
   // preset values for dynamic UI generators
-  sheetPresets: [18, 19, 26],
-  docPresets: [4, 7, 8, 9, 10, 14],
-  gutterPresets: [0.125, 0.25, 0.5],
+  sheetPresets: [18, 19, 26, 'custom'],
+  docPresets: [4, 7, 8, 9, 10, 14, 'custom'],
+  gutterPresets: [0.125, 0.25, 0.5, 'custom'],
   scoreTypes: [
     { value: 'bifold',   label: 'Bifold'   },
     { value: 'trifold',  label: 'Trifold'  },

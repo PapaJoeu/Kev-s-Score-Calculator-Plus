@@ -95,6 +95,19 @@ button:active {
   line-height: 1.2;
 }
 
+/* Custom size button styling */
+.picker-btn.custom-btn {
+  background-color: #28a745;
+}
+
+.picker-btn.custom-btn:hover {
+  background-color: #218838;
+}
+
+.picker-btn.custom-btn.active {
+  background-color: #1e7e34;
+}
+
 .picker-btn:hover {
   background-color: #0056b3;
 }
@@ -149,19 +162,24 @@ button.selected {
 }
 
 .picker-presets .picker-btn {
-  flex: 1 1 calc(50% - 3px);
-  min-width: 70px;
+  flex: 1 1 calc(33.333% - 4px);
+  min-width: 60px;
   box-sizing: border-box;
 }
 
 .picker-custom {
-  display: flex;
+  display: none;
   align-items: center;
   background: #fff;
   border: 1px solid #dee2e6;
   border-radius: 4px;
   padding: 2px;
   height: 32px;
+  margin-top: 8px;
+}
+
+.picker-custom.show {
+  display: flex;
 }
 
 .picker-custom label {
@@ -476,8 +494,8 @@ input[disabled] {
 }
 
 .picker-presets .picker-btn {
-  flex: 1 1 calc(50% - 3px);
-  min-width: 70px;
+  flex: 1 1 calc(33.333% - 4px);
+  min-width: 60px;
   margin: 0;
   padding: 8px 4px;
   text-align: center;
@@ -493,13 +511,18 @@ input[disabled] {
 
 /* Custom input wrapper */
 .picker-custom {
-  display: flex;
+  display: none;
   align-items: center;
   background: #fff;
   border: 1px solid #dee2e6;
   border-radius: 4px;
   padding: 2px;
   height: 32px;
+  margin-top: 8px;
+}
+
+.picker-custom.show {
+  display: flex;
 }
 
 .picker-custom label {
