@@ -340,6 +340,125 @@ canvas {
     font-size: 15px;
   }
 }
+
+/* ==========================================
+   MOBILE VISUALIZER-FIRST OPTIMIZATIONS
+   ========================================== */
+
+/* Mobile-first: Compact input controls to prioritize visualizer */
+@media (max-width: 430px) {
+  /* Reduce section spacing dramatically */
+  .section {
+    margin-bottom: 12px; /* Reduced from 20px */
+  }
+  
+  /* Compact main header */
+  .main-header {
+    font-size: 1.2rem; /* Smaller */
+    margin-bottom: 16px; /* Reduced from 24px */
+  }
+  
+  /* Tighter section titles */
+  .section-title {
+    font-size: 0.8rem;
+    margin-bottom: 6px; /* Reduced from 8px */
+    padding-bottom: 1px;
+  }
+  
+  /* Compact picker containers */
+  .picker {
+    padding: 8px; /* Reduced from 12px */
+    margin-top: 4px; /* Reduced from 6px */
+  }
+  
+  /* Smaller preset buttons but maintain touch targets */
+  .picker-presets {
+    gap: 4px; /* Reduced from 6px */
+    margin-bottom: 6px; /* Reduced from 8px */
+  }
+  
+  .picker-btn {
+    padding: 8px 4px; /* Reduced from 12px 4px */
+    font-size: 14px; /* Reduced from 18px */
+    min-height: 36px; /* Reduced from 44px but still tappable */
+  }
+  
+  /* Horizontal layout for numeric inputs on mobile */
+  .mobile-horizontal {
+    display: flex;
+    gap: 8px;
+  }
+  
+  .mobile-horizontal .section {
+    flex: 1;
+    margin-bottom: 8px;
+  }
+  
+  /* Make score type more compact */
+  #score-presets .picker-btn {
+    font-size: 12px;
+    padding: 6px 2px;
+    min-height: 32px;
+  }
+  
+  /* Compact custom input containers */
+  .picker-custom {
+    height: 28px; /* Reduced from 32px */
+    margin-top: 6px; /* Reduced from 8px */
+  }
+  
+  .picker-custom label {
+    font-size: 11px; /* Reduced from 12px */
+    padding: 4px 6px; /* Reduced from 6px 8px */
+  }
+  
+  .picker-custom input {
+    font-size: 11px; /* Reduced from 12px */
+    padding: 4px 6px; /* Reduced from 6px 8px */
+  }
+  
+  /* Compact calculate button */
+  .calculate {
+    padding: 10px 16px; /* Reduced from 14px */
+    font-size: 16px;
+    margin: 8px 0; /* Reduced spacing around button */
+  }
+  
+  /* Remove excessive container padding on mobile */
+  .container {
+    padding: 12px; /* Reduced from 16px */
+  }
+}
+
+/* Mobile: Group sheet/doc/gutter horizontally to save space */
+@media (max-width: 430px) {
+  .mobile-input-group {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  
+  .mobile-input-group .section {
+    flex: 1;
+    margin-bottom: 0;
+  }
+  
+  .mobile-input-group .section-title {
+    font-size: 0.7rem;
+    margin-bottom: 4px;
+  }
+  
+  .mobile-input-group .picker {
+    padding: 6px;
+  }
+  
+  .mobile-input-group .picker-btn {
+    font-size: 12px;
+    padding: 6px 2px;
+    min-height: 30px;
+  }
+}
+
 /* ==========================================
    UTILITY CLASSES
    ========================================== */
@@ -675,5 +794,123 @@ canvas {
   input,
   select {
     font-size: 15px;
+  }
+}
+
+/* ==========================================
+   MOBILE VISUALIZER-FIRST OPTIMIZATIONS
+   ========================================== */
+
+/* Mobile-first: Compact input controls to prioritize visualizer */
+@media (max-width: 430px) {
+  /* Reduce section spacing dramatically */
+  .section {
+    margin-bottom: 12px; /* Reduced from 20px */
+  }
+  
+  /* Compact main header */
+  .main-header {
+    font-size: 1.2rem; /* Smaller */
+    margin-bottom: 16px; /* Reduced from 24px */
+  }
+  
+  /* Tighter section titles */
+  .section-title {
+    font-size: 0.8rem;
+    margin-bottom: 6px; /* Reduced from 8px */
+    padding-bottom: 1px;
+  }
+  
+  /* Compact picker containers */
+  .picker {
+    padding: 8px; /* Reduced from 12px */
+    margin-top: 4px; /* Reduced from 6px */
+  }
+  
+  /* Smaller preset buttons but maintain touch targets */
+  .picker-presets {
+    gap: 4px; /* Reduced from 6px */
+    margin-bottom: 6px; /* Reduced from 8px */
+  }
+  
+  .picker-btn {
+    padding: 8px 4px; /* Reduced from 12px 4px */
+    font-size: 14px; /* Reduced from 18px */
+    min-height: 36px; /* Reduced from 44px but still tappable */
+  }
+  
+  /* Horizontal layout for numeric inputs on mobile */
+  .mobile-horizontal {
+    display: flex;
+    gap: 8px;
+  }
+  
+  .mobile-horizontal .section {
+    flex: 1;
+    margin-bottom: 8px;
+  }
+  
+  /* Make score type more compact */
+  #score-presets .picker-btn {
+    font-size: 12px;
+    padding: 6px 2px;
+    min-height: 32px;
+  }
+  
+  /* Compact custom input containers */
+  .picker-custom {
+    height: 28px; /* Reduced from 32px */
+    margin-top: 6px; /* Reduced from 8px */
+  }
+  
+  .picker-custom label {
+    font-size: 11px; /* Reduced from 12px */
+    padding: 4px 6px; /* Reduced from 6px 8px */
+  }
+  
+  .picker-custom input {
+    font-size: 11px; /* Reduced from 12px */
+    padding: 4px 6px; /* Reduced from 6px 8px */
+  }
+  
+  /* Compact calculate button */
+  .calculate {
+    padding: 10px 16px; /* Reduced from 14px */
+    font-size: 16px;
+    margin: 8px 0; /* Reduced spacing around button */
+  }
+  
+  /* Remove excessive container padding on mobile */
+  .container {
+    padding: 12px; /* Reduced from 16px */
+  }
+}
+
+/* Mobile: Group sheet/doc/gutter horizontally to save space */
+@media (max-width: 430px) {
+  .mobile-input-group {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  
+  .mobile-input-group .section {
+    flex: 1;
+    margin-bottom: 0;
+  }
+  
+  .mobile-input-group .section-title {
+    font-size: 0.7rem;
+    margin-bottom: 4px;
+  }
+  
+  .mobile-input-group .picker {
+    padding: 6px;
+  }
+  
+  .mobile-input-group .picker-btn {
+    font-size: 12px;
+    padding: 6px 2px;
+    min-height: 30px;
   }
 }

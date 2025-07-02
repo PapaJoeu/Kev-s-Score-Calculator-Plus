@@ -13,41 +13,44 @@
     <!-- Page Title -->
     <h1 class="main-header">Kev's Bitchin' Score Calculator</h1>
 
-    <!-- Sheet Dimensions Picker -->
-    <section class="section" id="sheet-section">
-      <h2 class="section-title">Sheet Dimensions</h2>
-      <div id="sheet-picker" class="picker">
-        <div class="picker-presets" id="sheet-presets"></div>
-        <div class="picker-custom">
-          <label for="sheet-custom">Sheet Length</label>
-          <input id="sheet-custom" type="number" step="1" />
+    <!-- Mobile-Optimized Numeric Inputs: Sheet, Document, Gutter -->
+    <div class="mobile-input-group">
+      <!-- Sheet Dimensions Picker -->
+      <section class="section" id="sheet-section">
+        <h2 class="section-title">Sheet</h2>
+        <div id="sheet-picker" class="picker">
+          <div class="picker-presets" id="sheet-presets"></div>
+          <div class="picker-custom">
+            <label for="sheet-custom">Length</label>
+            <input id="sheet-custom" type="number" step="1" />
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Document Dimensions Picker -->
-    <section class="section" id="doc-section">
-      <h2 class="section-title">Document Dimensions</h2>
-      <div id="doc-picker" class="picker">
-        <div class="picker-presets" id="doc-presets"></div>
-        <div class="picker-custom">
-          <label for="doc-custom">Document Length</label>
-          <input id="doc-custom" type="number" step="0.25" />
+      <!-- Document Dimensions Picker -->
+      <section class="section" id="doc-section">
+        <h2 class="section-title">Document</h2>
+        <div id="doc-picker" class="picker">
+          <div class="picker-presets" id="doc-presets"></div>
+          <div class="picker-custom">
+            <label for="doc-custom">Length</label>
+            <input id="doc-custom" type="number" step="0.25" />
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Gutter Size Picker -->
-    <section class="section" id="gutter-section">
-      <h2 class="section-title">Gutter Size</h2>
-      <div id="gutter-picker" class="picker">
-        <div class="picker-presets" id="gutter-presets"></div>
-        <div class="picker-custom">
-          <label for="gutter-custom">Gutter Length</label>
-          <input id="gutter-custom" type="number" step="0.125" />
+      <!-- Gutter Size Picker -->
+      <section class="section" id="gutter-section">
+        <h2 class="section-title">Gutter</h2>
+        <div id="gutter-picker" class="picker">
+          <div class="picker-presets" id="gutter-presets"></div>
+          <div class="picker-custom">
+            <label for="gutter-custom">Size</label>
+            <input id="gutter-custom" type="number" step="0.125" />
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
 
     <!-- Scoring Type Picker -->
     <section class="section" id="score-type-section">
