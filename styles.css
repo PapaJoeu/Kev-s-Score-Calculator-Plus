@@ -459,7 +459,35 @@ canvas {
   }
 }
 
-/* ==========================================
+/* AGGRESSIVE VISUALIZER SPACE OPTIMIZATION */
+  
+  /* Minimize canvas margins - every pixel counts on mobile */
+  canvas {
+    margin-bottom: 8px !important; /* Reduced from 16px */
+    margin-top: 4px; /* Add minimal top margin */
+  }
+  
+  /* Compact adjustment controls */
+  #adjust-section {
+    margin: 8px 0; /* Reduced from 16px */
+  }
+  
+  /* Hide results table completely on mobile - visualizer is primary */
+  .results-section {
+    display: none; /* Results compete with visualizer for attention */
+  }
+  
+  /* If we need to show key info, show compact summary only */
+  .mobile-results-summary {
+    display: block;
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+    margin: 8px 0;
+    padding: 4px;
+  }
+
+  /* ==========================================
    UTILITY CLASSES
    ========================================== */
 .u-gap-8 {
@@ -914,3 +942,31 @@ canvas {
     min-height: 30px;
   }
 }
+
+/* AGGRESSIVE VISUALIZER SPACE OPTIMIZATION */
+  
+  /* Minimize canvas margins - every pixel counts on mobile */
+  canvas {
+    margin-bottom: 8px !important; /* Reduced from 16px */
+    margin-top: 4px; /* Add minimal top margin */
+  }
+  
+  /* Compact adjustment controls */
+  #adjust-section {
+    margin: 8px 0; /* Reduced from 16px */
+  }
+  
+  /* Hide results table completely on mobile - visualizer is primary */
+  .results-section {
+    display: none; /* Results compete with visualizer for attention */
+  }
+  
+  /* If we need to show key info, show compact summary only */
+  .mobile-results-summary {
+    display: block;
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+    margin: 8px 0;
+    padding: 4px;
+  }

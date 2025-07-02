@@ -10,17 +10,24 @@
  * Setup canvas with responsive sizing
  */
 function setupCanvas(canvas) {
-  // Responsive sizing: full width, 25% of viewport height
   const container = canvas.parentElement;
   const containerWidth = container.offsetWidth;
   const viewportHeight = window.innerHeight;
   
+  // Mobile-first: Much larger visualizer on small screens
+  const isMobile = window.innerWidth <= 430;
+  const heightPercentage = isMobile ? 0.65 : 0.25; // 65% on mobile, 25% on desktop
+  const minHeight = isMobile ? 400 : 200; // Higher minimum on mobile
+  
   canvas.width = containerWidth;
-  canvas.height = Math.max(200, viewportHeight * 0.25); // Min 200px
+  canvas.height = Math.max(minHeight, viewportHeight * heightPercentage);
+  
+  console.log(`Canvas sized for ${isMobile ? 'mobile' : 'desktop'}: ${canvas.width}x${canvas.height}`);
   
   return {
     width: canvas.width,
-    height: canvas.height
+    height: canvas.height,
+    isMobile: isMobile
   };
 }
 
@@ -43,14 +50,15 @@ function calculateScale(canvasWidth, pageLength) {
 /**
  * Draw ruler with tick marks and measurements
  */
-function drawRuler(ctx, pageLength, scale, canvasHeight) {
+function drawRuler(ctx, pageLength, scale, canvasHeight, isMobile) {
   const rulerY = canvasHeight - 40; // Position near bottom
-  const tickHeight = 15;
+  const tickHeight = isMobile ? 20 : 15; // Larger ticks on mobile
   
   ctx.strokeStyle = "#666";
   ctx.fillStyle = "#666";
-  ctx.font = "12px Arial";
+  ctx.font = `${getResponsiveFontSize(12, isMobile)}px Arial`;
   ctx.textAlign = "center";
+  ctx.lineWidth = getResponsiveLineWidth(1, isMobile);
   
   // Draw ruler baseline
   ctx.beginPath();
@@ -68,8 +76,8 @@ function drawRuler(ctx, pageLength, scale, canvasHeight) {
     ctx.lineTo(x, rulerY + tickHeight);
     ctx.stroke();
     
-    // Label every inch
-    ctx.fillText(inch + '"', x, rulerY + tickHeight + 15);
+    // Label every inch (larger on mobile)
+    ctx.fillText(inch + '"', x, rulerY + tickHeight + (isMobile ? 18 : 15));
     
     // Minor tick at half inch
     if (inch < pageLength) {
@@ -85,21 +93,21 @@ function drawRuler(ctx, pageLength, scale, canvasHeight) {
 /**
  * Draw sheet outline with dimensions
  */
-function drawSheet(ctx, pageLength, scale, canvasHeight) {
+function drawSheet(ctx, pageLength, scale, canvasHeight, isMobile) {
   const sheetY = canvasHeight * 0.3;
   const sheetHeight = canvasHeight * 0.4;
   const sheetWidth = pageLength * scale;
   
   // Sheet outline
   ctx.strokeStyle = "#333";
-  ctx.lineWidth = 2;
+  ctx.lineWidth = getResponsiveLineWidth(2, isMobile);
   ctx.strokeRect(0, sheetY, sheetWidth, sheetHeight);
   
   // Sheet dimension label
   ctx.fillStyle = "#333";
-  ctx.font = "14px Arial";
+  ctx.font = `${getResponsiveFontSize(14, isMobile)}px Arial`;
   ctx.textAlign = "center";
-  ctx.fillText(`Sheet: ${pageLength}"`, sheetWidth / 2, sheetY - 10);
+  ctx.fillText(`Sheet: ${pageLength}"`, sheetWidth / 2, sheetY - (isMobile ? 15 : 10));
   
   return { y: sheetY, height: sheetHeight, width: sheetWidth };
 }
@@ -107,10 +115,10 @@ function drawSheet(ctx, pageLength, scale, canvasHeight) {
 /**
  * Draw documents with subtle borders
  */
-function drawDocuments(ctx, docStarts, docLength, scale, sheetBounds) {
+function drawDocuments(ctx, docStarts, docLength, scale, sheetBounds, isMobile) {
   ctx.fillStyle = "#e3f2fd"; // Light blue
   ctx.strokeStyle = "#1976d2"; // Darker blue border
-  ctx.lineWidth = 1;
+  ctx.lineWidth = getResponsiveLineWidth(1, isMobile);
   
   docStarts.forEach((start, index) => {
     const x = start * scale;
@@ -122,7 +130,7 @@ function drawDocuments(ctx, docStarts, docLength, scale, sheetBounds) {
     
     // Document label
     ctx.fillStyle = "#1976d2";
-    ctx.font = "12px Arial";
+    ctx.font = isMobile ? "14px Arial" : "12px Arial"; // Conservative mobile increase
     ctx.textAlign = "center";
     ctx.fillText(
       `Doc ${index + 1}`, 
@@ -136,11 +144,11 @@ function drawDocuments(ctx, docStarts, docLength, scale, sheetBounds) {
 /**
  * Draw purple score lines with labels and adjustment indicators
  */
-function drawScoreLines(ctx, scorePositions, scale, sheetBounds, adjustments = {}) {
+function drawScoreLines(ctx, scorePositions, scale, sheetBounds, adjustments = {}, isMobile) {
   ctx.strokeStyle = "#7b1fa2"; // Professional purple
-  ctx.lineWidth = 2;
+  ctx.lineWidth = getResponsiveLineWidth(2, isMobile);
   ctx.fillStyle = "#7b1fa2";
-  ctx.font = "11px Arial";
+  ctx.font = isMobile ? "13px Arial" : "11px Arial"; // Conservative mobile increase
   ctx.textAlign = "center";
   
   scorePositions.forEach(pos => {
@@ -163,7 +171,7 @@ function drawScoreLines(ctx, scorePositions, scale, sheetBounds, adjustments = {
   // Show adjustment indicator if any adjustments are active
   if (adjustments.netAdjustment && adjustments.netAdjustment !== 0) {
     ctx.fillStyle = "#ff5722"; // Orange for adjustments
-    ctx.font = "12px Arial";
+    ctx.font = isMobile ? "14px Arial" : "12px Arial"; // Conservative mobile increase
     ctx.textAlign = "right";
     const adjustmentValue = (adjustments.netAdjustment * 0.001).toFixed(3);
     ctx.fillText(
@@ -177,16 +185,16 @@ function drawScoreLines(ctx, scorePositions, scale, sheetBounds, adjustments = {
 /**
  * Draw measurement labels and title
  */
-function drawLabels(ctx, pageLength, docLength, gutterSize, scale) {
+function drawLabels(ctx, pageLength, docLength, gutterSize, scale, isMobile) {
   ctx.fillStyle = "#333";
-  ctx.font = "16px Arial";
+  ctx.font = isMobile ? "18px Arial" : "16px Arial"; // Conservative title increase
   ctx.textAlign = "left";
   
   // Title
   ctx.fillText("Score Calculator - Print Production Layout", 10, 25);
   
   // Basic measurements
-  ctx.font = "12px Arial";
+  ctx.font = isMobile ? "14px Arial" : "12px Arial"; // Conservative measurement increase
   ctx.fillText(`Document Length: ${docLength}"`, 10, 45);
   ctx.fillText(`Gutter Size: ${gutterSize}"`, 10, 62);
   
@@ -248,12 +256,30 @@ function drawVisualization(pageLength, docStarts, docLength, scorePositions, gut
   
   const sheetBounds = drawSheet(ctx, pageLength, scale, dimensions.height);
   drawGutters(ctx, docStarts, docLength, gutterSize, scale, sheetBounds); // Draw gutters first
-  drawDocuments(ctx, docStarts, docLength, scale, sheetBounds);
-  drawScoreLines(ctx, scorePositions, scale, sheetBounds, adjustments);
-  drawRuler(ctx, pageLength, scale, dimensions.height);
-  drawLabels(ctx, pageLength, docLength, gutterSize, scale);
+  drawDocuments(ctx, docStarts, docLength, scale, sheetBounds, dimensions.isMobile);
+  drawScoreLines(ctx, scorePositions, scale, sheetBounds, adjustments, dimensions.isMobile);
+  drawRuler(ctx, pageLength, scale, dimensions.height, dimensions.isMobile);
+  drawLabels(ctx, pageLength, docLength, gutterSize, scale, dimensions.isMobile);
   
   ctx.restore();
   
-  console.log("Professional visualization rendered with gutters");
+  console.log("Professional visualization rendered with responsive scaling");
+}
+
+/**
+ * Get responsive font size based on screen size
+ */
+function getResponsiveFontSize(baseSizeDesktop, isMobile) {
+  // Conservative mobile scaling for better readability without breaking layout
+  const mobileMultiplier = 1.3; // 30% larger on mobile - more conservative
+  return isMobile ? Math.round(baseSizeDesktop * mobileMultiplier) : baseSizeDesktop;
+}
+
+/**
+ * Get responsive line width based on screen size
+ */
+function getResponsiveLineWidth(baseWidth, isMobile) {
+  // Thicker lines on mobile for better visibility
+  const mobileMultiplier = 1.5;
+  return isMobile ? Math.round(baseWidth * mobileMultiplier) : baseWidth;
 }

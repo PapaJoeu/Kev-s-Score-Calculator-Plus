@@ -100,14 +100,32 @@ Based on mobile screenshot feedback, the current visualizer has critical issues:
 **Priority**: High (affects core user experience)
 
 ### Progress Tracking:
-- [ ] Step 1: Maximize canvas height (65vh mobile)
-- [ ] Step 2: Enhance text readability (2.2x mobile multiplier)
+- [x] Step 1: Maximize canvas height (65vh mobile) ✅ COMPLETED
+- [x] Step 2: Enhance text readability ✅ COMPLETED (Revised approach)
 - [ ] Step 3: Aggressive space reclamation (minimal margins, hidden tables)
 - [ ] Step 4: Polish and validate (device testing)
 
+### Key Lessons Learned:
+**CRITICAL**: Aggressive font scaling (2.2x) breaks layout completely!
+- Font overlapping and breaking visualizer layout
+- Text positioning becomes inconsistent
+- Score labels and measurements become unreadable due to overlap
+
+**SOLUTION**: Conservative, targeted font increases:
+- Use `isMobile ? "14px" : "12px"` instead of formula multipliers
+- Increase by 15-20% rather than 2x
+- Test each font change individually
+- Maintain visual hierarchy and spacing
+
+**REVISED APPROACH**: 
+- Title: 16px → 18px mobile (12% increase)
+- Labels/measurements: 12px → 14px mobile (17% increase)
+- Score lines: 11px → 13px mobile (18% increase)
+- Canvas height: Successfully increased to 65vh mobile ✅
+
 ### Commit Points:
-- [ ] After Step 1: Canvas height maximized
-- [ ] After Step 2: Text readability enhanced
+- [x] After Step 1: Canvas height maximized ✅
+- [x] After Step 2: Text readability enhanced (conservative approach) ✅
 - [ ] After Step 3: Space optimization complete
 - [ ] Final: Visualizer scaling enhancement complete
 
