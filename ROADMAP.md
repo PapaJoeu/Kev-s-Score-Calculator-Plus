@@ -5,6 +5,14 @@ Each task should be completed, tested, and committed individually. No massive re
 
 ## Quick Wins (Low Risk, High Value)
 
+### Task 0: Break Up Larger Functions by Functionality
+**Goal**: Make the code more modular and maintainable
+**Files**: js/calc.js, js/ui.js, js/draw.js, js/main.js
+**Action**: Identify large functions and break them into smaller, focused functions (1 FILE AT A TIME WITH COMMITS AT EACH POINT)
+**Why**: I have a bunch of functions that calculate stuff, manage DOM, and draw on the canvas all mixed together. This makes it hard to read and maintain.
+**Time**: 1 hour per file
+**Risk**: Low - only restructuring code, no functional changes 
+
 ### Task 1: Add Better Comments to Existing Code
 **Goal**: Make the current working code easier to understand
 **Files**: js/calc.js, js/ui.js, js/draw.js, js/main.js
