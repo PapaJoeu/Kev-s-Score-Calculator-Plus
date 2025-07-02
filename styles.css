@@ -487,7 +487,7 @@ canvas {
     padding: 4px;
   }
 
-  /* ==========================================
+/* ==========================================
    UTILITY CLASSES
    ========================================== */
 .u-gap-8 {
@@ -969,4 +969,61 @@ canvas {
     color: #666;
     margin: 8px 0;
     padding: 4px;
+  }
+
+/* ==========================================
+   ICONS & VISUAL ENHANCEMENTS
+   ========================================== */
+
+/* Main logo next to page header */
+.main-logo {
+  width: 32px;
+  height: 32px;
+  margin-right: 12px;
+  vertical-align: middle;
+  display: inline-block;
+}
+
+/* Section icons next to section headers */
+.section-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
+  vertical-align: middle;
+  display: inline-block;
+}
+
+/* Header containers to align icons with text */
+.header-with-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* For main header */
+}
+
+.section-header-with-icon {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* For section headers */
+}
+
+/* Ensure icons don't break text flow */
+.section-header-with-icon .section-title {
+  margin: 0;
+  border: none;
+  padding: 0;
+}
+
+/* MOBILE ICON SIZING */
+  
+  /* Smaller icons on mobile to save space */
+  .main-logo {
+    width: 28px;
+    height: 28px;
+    margin-right: 8px;
+  }
+  
+  .section-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 6px;
   }

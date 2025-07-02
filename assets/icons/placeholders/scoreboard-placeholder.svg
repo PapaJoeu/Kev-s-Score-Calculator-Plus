@@ -1,0 +1,13 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <!-- Scoreboard placeholder: Rectangle with number display -->
+  <rect x="2" y="6" width="28" height="20" fill="none" stroke="black" stroke-width="2" rx="2"/>
+  <rect x="4" y="8" width="24" height="16" fill="none" stroke="black" stroke-width="1"/>
+  <!-- Score display numbers -->
+  <rect x="6" y="10" width="8" height="6" fill="black"/>
+  <rect x="18" y="10" width="8" height="6" fill="black"/>
+  <!-- Separating line -->
+  <line x1="16" y1="10" x2="16" y2="22" stroke="black" stroke-width="1"/>
+  <!-- LED dots simulation -->
+  <circle cx="10" cy="13" r="0.5" fill="white"/>
+  <circle cx="22" cy="13" r="0.5" fill="white"/>
+</svg>

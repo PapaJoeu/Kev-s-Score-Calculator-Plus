@@ -1,0 +1,10 @@
+<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <!-- Child placeholder: Single smaller figure representing a boy -->
+  <circle cx="12" cy="7" r="3.5" fill="none" stroke="black" stroke-width="1.5"/>
+  <rect x="8" y="11" width="8" height="10" fill="none" stroke="black" stroke-width="1.5" rx="2"/>
+  <!-- Simple clothing detail -->
+  <line x1="8" y1="15" x2="16" y2="15" stroke="black" stroke-width="1"/>
+  <!-- Arms -->
+  <line x1="8" y1="13" x2="5" y2="16" stroke="black" stroke-width="1.5"/>
+  <line x1="16" y1="13" x2="19" y2="16" stroke="black" stroke-width="1.5"/>
+</svg>
