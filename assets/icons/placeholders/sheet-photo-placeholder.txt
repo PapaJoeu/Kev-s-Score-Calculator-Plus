@@ -1,0 +1,3 @@
+<!-- This is a placeholder file. Replace this with the actual image file you want to use.
+The image should be saved as 'sheet-photo.jpg' or 'sheet-photo.png' in this directory.
+The CSS will handle the sizing and styling automatically. -->

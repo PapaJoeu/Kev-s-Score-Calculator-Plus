@@ -1027,3 +1027,17 @@ canvas {
     height: 20px;
     margin-right: 6px;
   }
+
+/* Special styling for photo-based icons */
+.section-icon.photo-icon {
+  object-fit: contain; /* Keep full image visible without cropping */
+  border: 1px solid #ccc; /* Subtle border */
+  background: white; /* White background in case image has transparency */
+}
+
+/* Ensure photo icons maintain proper aspect ratio */
+.main-logo.photo-icon {
+  object-fit: contain; /* Keep full image visible without cropping */
+  border: 1px solid #ccc;
+  background: white;
+}

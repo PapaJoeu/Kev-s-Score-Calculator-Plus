@@ -25,12 +25,13 @@ assets/icons/
 - **Color**: Black and white SVG
 - **Usage**: Left of main page title "Kev's Bitchin' Score Calculator"
 
-### 2. Sheet Icon (Parents)
-- **File**: `parents-placeholder.svg` → Replace with final design  
-- **Theme**: Two parent figures (mother and father silhouettes)
+### 2. Sheet Icon (Photo)
+- **File**: `sheet-photo.jpg` or `sheet-photo.png` → Replace with your photo
+- **Theme**: Personal photo (woman with brown hair as provided)
 - **Concept**: Sheet as "parent" container holding documents
 - **Size**: 24px × 24px (desktop), 20px × 20px (mobile)
-- **Color**: Black and white SVG
+- **Format**: JPG, PNG, or any web image format
+- **Styling**: Maintains original aspect ratio, no cropping
 - **Usage**: Left of "SHEET" section header
 
 ### 3. Document Icon (Child)
@@ -52,14 +53,13 @@ assets/icons/
 ## How to Replace Placeholders
 
 ### Option 1: Replace Placeholder Files
-1. Create your final SVG files
-2. Name them exactly as the placeholders:
-   - `scoreboard-placeholder.svg`
-   - `parents-placeholder.svg`
-   - `child-placeholder.svg`
-   - `poe-placeholder.svg`
-3. Replace the files in `assets/icons/placeholders/`
-4. No code changes needed!
+1. Create your final icon files (SVG or photo formats):
+   - `scoreboard-placeholder.svg` (scoreboard design)
+   - `sheet-photo.jpg` or `sheet-photo.png` (your photo)
+   - `child-placeholder.svg` (child figure)
+   - `poe-placeholder.svg` (Poe/raven design)
+2. Replace the files in `assets/icons/placeholders/`
+3. No code changes needed - photos keep their original aspect ratio!
 
 ### Option 2: Use Final File Structure
 1. Place final icons in appropriate folders:
