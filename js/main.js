@@ -107,7 +107,8 @@ function adjustScores(direction) {
   const pageLength = CONFIG.pageLength;
   const docLength = CONFIG.docLength;
   const gutterSize = CONFIG.gutterSize;
-  drawVisualization(pageLength, window._lastDocStarts, docLength, window.currentAdjustedScores, gutterSize);
+  const adjustmentInfo = { netAdjustment: window.netAdjustment };
+  drawVisualization(pageLength, window._lastDocStarts, docLength, window.currentAdjustedScores, gutterSize, adjustmentInfo);
 }
 
 /**

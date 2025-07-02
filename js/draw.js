@@ -101,7 +101,7 @@ function drawSheet(ctx, pageLength, scale, canvasHeight) {
   ctx.textAlign = "center";
   ctx.fillText(`Sheet: ${pageLength}"`, sheetWidth / 2, sheetY - 10);
   
-  return { y: sheetY, height: sheetHeight };
+  return { y: sheetY, height: sheetHeight, width: sheetWidth };
 }
 
 /**
@@ -134,9 +134,9 @@ function drawDocuments(ctx, docStarts, docLength, scale, sheetBounds) {
 }
 
 /**
- * Draw purple score lines with labels
+ * Draw purple score lines with labels and adjustment indicators
  */
-function drawScoreLines(ctx, scorePositions, scale, sheetBounds) {
+function drawScoreLines(ctx, scorePositions, scale, sheetBounds, adjustments = {}) {
   ctx.strokeStyle = "#7b1fa2"; // Professional purple
   ctx.lineWidth = 2;
   ctx.fillStyle = "#7b1fa2";
@@ -159,6 +159,19 @@ function drawScoreLines(ctx, scorePositions, scale, sheetBounds) {
       sheetBounds.y - 15
     );
   });
+  
+  // Show adjustment indicator if any adjustments are active
+  if (adjustments.netAdjustment && adjustments.netAdjustment !== 0) {
+    ctx.fillStyle = "#ff5722"; // Orange for adjustments
+    ctx.font = "12px Arial";
+    ctx.textAlign = "right";
+    const adjustmentValue = (adjustments.netAdjustment * 0.001).toFixed(3);
+    ctx.fillText(
+      `Adjustment: ${adjustmentValue > 0 ? '+' : ''}${adjustmentValue}"`, 
+      sheetBounds.width - 10, 
+      sheetBounds.y - 25
+    );
+  }
 }
 
 /**
@@ -236,7 +249,7 @@ function drawVisualization(pageLength, docStarts, docLength, scorePositions, gut
   const sheetBounds = drawSheet(ctx, pageLength, scale, dimensions.height);
   drawGutters(ctx, docStarts, docLength, gutterSize, scale, sheetBounds); // Draw gutters first
   drawDocuments(ctx, docStarts, docLength, scale, sheetBounds);
-  drawScoreLines(ctx, scorePositions, scale, sheetBounds);
+  drawScoreLines(ctx, scorePositions, scale, sheetBounds, adjustments);
   drawRuler(ctx, pageLength, scale, dimensions.height);
   drawLabels(ctx, pageLength, docLength, gutterSize, scale);
   
