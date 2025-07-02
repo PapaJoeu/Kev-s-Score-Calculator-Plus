@@ -1,50 +1,218 @@
-// Canvas visualizer for Kev's Scoring Calculator
+/**
+ * Professional canvas visualizer for print production scoring
+ */
 
-// Draw sheet, documents, and score lines
-function drawVisualization(pageLength, docStarts, docLength, scorePositions) {
-  const canvas = document.getElementById("visualizer");
-  const ctx = canvas.getContext("2d");
+// ===========================================
+// CANVAS SETUP
+// ===========================================
 
-  // set canvas size from config
-  canvas.width = CONFIG.canvas.width;
-  canvas.height = CONFIG.canvas.height;
+/**
+ * Setup canvas with responsive sizing
+ */
+function setupCanvas(canvas) {
+  // Responsive sizing: full width, 25% of viewport height
+  const container = canvas.parentElement;
+  const containerWidth = container.offsetWidth;
+  const viewportHeight = window.innerHeight;
+  
+  canvas.width = containerWidth;
+  canvas.height = Math.max(200, viewportHeight * 0.25); // Min 200px
+  
+  return {
+    width: canvas.width,
+    height: canvas.height
+  };
+}
 
-  const W = canvas.width;
-  const H = canvas.height;
-
-  // clear previous drawing
-  ctx.clearRect(0, 0, W, H);
-
-  // calculate scale: pixels per inch
-  const scale = W / pageLength;
+/**
+ * Calculate drawing scale: pixels per inch
+ */
+function calculateScale(canvasWidth, pageLength) {
+  const scale = canvasWidth / pageLength;
   if (scale <= 0 || !isFinite(scale)) {
+    console.error("Invalid page length for visualization:", pageLength);
+    return 0;
+  }
+  return scale;
+}
+
+// ===========================================
+// DRAWING COMPONENTS  
+// ===========================================
+
+/**
+ * Draw ruler with tick marks and measurements
+ */
+function drawRuler(ctx, pageLength, scale, canvasHeight) {
+  const rulerY = canvasHeight - 40; // Position near bottom
+  const tickHeight = 15;
+  
+  ctx.strokeStyle = "#666";
+  ctx.fillStyle = "#666";
+  ctx.font = "12px Arial";
+  ctx.textAlign = "center";
+  
+  // Draw ruler baseline
+  ctx.beginPath();
+  ctx.moveTo(0, rulerY);
+  ctx.lineTo(pageLength * scale, rulerY);
+  ctx.stroke();
+  
+  // Draw tick marks and labels
+  for (let inch = 0; inch <= pageLength; inch++) {
+    const x = inch * scale;
+    
+    // Major tick every inch
+    ctx.beginPath();
+    ctx.moveTo(x, rulerY);
+    ctx.lineTo(x, rulerY + tickHeight);
+    ctx.stroke();
+    
+    // Label every inch
+    ctx.fillText(inch + '"', x, rulerY + tickHeight + 15);
+    
+    // Minor tick at half inch
+    if (inch < pageLength) {
+      const halfX = (inch + 0.5) * scale;
+      ctx.beginPath();
+      ctx.moveTo(halfX, rulerY);
+      ctx.lineTo(halfX, rulerY + tickHeight * 0.6);
+      ctx.stroke();
+    }
+  }
+}
+
+/**
+ * Draw sheet outline with dimensions
+ */
+function drawSheet(ctx, pageLength, scale, canvasHeight) {
+  const sheetY = canvasHeight * 0.3;
+  const sheetHeight = canvasHeight * 0.4;
+  const sheetWidth = pageLength * scale;
+  
+  // Sheet outline
+  ctx.strokeStyle = "#333";
+  ctx.lineWidth = 2;
+  ctx.strokeRect(0, sheetY, sheetWidth, sheetHeight);
+  
+  // Sheet dimension label
+  ctx.fillStyle = "#333";
+  ctx.font = "14px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText(`Sheet: ${pageLength}"`, sheetWidth / 2, sheetY - 10);
+  
+  return { y: sheetY, height: sheetHeight };
+}
+
+/**
+ * Draw documents with subtle borders
+ */
+function drawDocuments(ctx, docStarts, docLength, scale, sheetBounds) {
+  ctx.fillStyle = "#e3f2fd"; // Light blue
+  ctx.strokeStyle = "#1976d2"; // Darker blue border
+  ctx.lineWidth = 1;
+  
+  docStarts.forEach((start, index) => {
+    const x = start * scale;
+    const width = docLength * scale;
+    
+    // Document rectangle
+    ctx.fillRect(x, sheetBounds.y, width, sheetBounds.height);
+    ctx.strokeRect(x, sheetBounds.y, width, sheetBounds.height);
+    
+    // Document label
+    ctx.fillStyle = "#1976d2";
+    ctx.font = "12px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText(
+      `Doc ${index + 1}`, 
+      x + width / 2, 
+      sheetBounds.y + sheetBounds.height / 2
+    );
+    ctx.fillStyle = "#e3f2fd"; // Reset fill for next doc
+  });
+}
+
+/**
+ * Draw purple score lines with labels
+ */
+function drawScoreLines(ctx, scorePositions, scale, sheetBounds) {
+  ctx.strokeStyle = "#7b1fa2"; // Professional purple
+  ctx.lineWidth = 2;
+  ctx.fillStyle = "#7b1fa2";
+  ctx.font = "11px Arial";
+  ctx.textAlign = "center";
+  
+  scorePositions.forEach(pos => {
+    const x = pos * scale;
+    
+    // Score line
+    ctx.beginPath();
+    ctx.moveTo(x, sheetBounds.y - 10);
+    ctx.lineTo(x, sheetBounds.y + sheetBounds.height + 10);
+    ctx.stroke();
+    
+    // Score position label
+    ctx.fillText(
+      pos.toFixed(3) + '"', 
+      x, 
+      sheetBounds.y - 15
+    );
+  });
+}
+
+/**
+ * Draw measurement labels and title
+ */
+function drawLabels(ctx, pageLength, docLength, scale) {
+  ctx.fillStyle = "#333";
+  ctx.font = "16px Arial";
+  ctx.textAlign = "left";
+  
+  // Title
+  ctx.fillText("Score Calculator - Print Production Layout", 10, 25);
+  
+  // Basic measurements
+  ctx.font = "12px Arial";
+  ctx.fillText(`Document Length: ${docLength}"`, 10, 45);
+}
+
+// ===========================================
+// MAIN DRAWING FUNCTION
+// ===========================================
+
+/**
+ * Draw complete visualization with professional print production layout
+ */
+function drawVisualization(pageLength, docStarts, docLength, scorePositions, adjustments = {}) {
+  const canvas = document.getElementById("visualizer");
+  if (!canvas) {
+    console.error("Canvas element not found");
+    return;
+  }
+  
+  const ctx = canvas.getContext("2d");
+  const dimensions = setupCanvas(canvas);
+  const scale = calculateScale(dimensions.width, pageLength);
+  
+  if (scale <= 0) {
     alert("Invalid page length for visualization.");
     return;
   }
-
+  
+  // Clear previous drawing
+  ctx.clearRect(0, 0, dimensions.width, dimensions.height);
+  
+  // Draw all components
   ctx.save();
-
-  // draw sheet outline
-  ctx.strokeStyle = "black";
-  ctx.strokeRect(0, H / 4, W, H / 2);
-
-  // draw documents
-  ctx.fillStyle = "#87cefa";
-  docStarts.forEach(start => {
-    const x = start * scale;
-    const w = docLength * scale;
-    ctx.fillRect(x, H / 4, w, H / 2);
-  });
-
-  // draw score lines
-  ctx.strokeStyle = "red";
-  scorePositions.forEach(pos => {
-    const x = pos * scale;
-    ctx.beginPath();
-    ctx.moveTo(x, H / 4);
-    ctx.lineTo(x, 3 * H / 4);
-    ctx.stroke();
-  });
-
+  
+  const sheetBounds = drawSheet(ctx, pageLength, scale, dimensions.height);
+  drawDocuments(ctx, docStarts, docLength, scale, sheetBounds);
+  drawScoreLines(ctx, scorePositions, scale, sheetBounds);
+  drawRuler(ctx, pageLength, scale, dimensions.height);
+  drawLabels(ctx, pageLength, docLength, scale);
+  
   ctx.restore();
+  
+  console.log("Professional visualization rendered");
 }
