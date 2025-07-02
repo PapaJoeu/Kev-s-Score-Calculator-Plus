@@ -103,12 +103,6 @@ function drawSheet(ctx, pageLength, scale, canvasHeight, isMobile) {
   ctx.lineWidth = getResponsiveLineWidth(2, isMobile);
   ctx.strokeRect(0, sheetY, sheetWidth, sheetHeight);
   
-  // Sheet dimension label
-  ctx.fillStyle = "#333";
-  ctx.font = `${getResponsiveFontSize(14, isMobile)}px Arial`;
-  ctx.textAlign = "center";
-  ctx.fillText(`Sheet: ${pageLength}"`, sheetWidth / 2, sheetY - (isMobile ? 15 : 10));
-  
   return { y: sheetY, height: sheetHeight, width: sheetWidth };
 }
 
@@ -128,14 +122,14 @@ function drawDocuments(ctx, docStarts, docLength, scale, sheetBounds, isMobile) 
     ctx.fillRect(x, sheetBounds.y, width, sheetBounds.height);
     ctx.strokeRect(x, sheetBounds.y, width, sheetBounds.height);
     
-    // Document label
+    // Document label positioned above the document area
     ctx.fillStyle = "#1976d2";
     ctx.font = isMobile ? "14px Arial" : "12px Arial"; // Conservative mobile increase
     ctx.textAlign = "center";
     ctx.fillText(
       `Doc ${index + 1}`, 
       x + width / 2, 
-      sheetBounds.y + sheetBounds.height / 2
+      sheetBounds.y - 15 // Position above the sheet
     );
     ctx.fillStyle = "#e3f2fd"; // Reset fill for next doc
   });
@@ -144,29 +138,37 @@ function drawDocuments(ctx, docStarts, docLength, scale, sheetBounds, isMobile) 
 /**
  * Draw purple score lines with labels and adjustment indicators
  */
-function drawScoreLines(ctx, scorePositions, scale, sheetBounds, adjustments = {}, isMobile) {
+function drawScoreLines(ctx, scorePositions, scale, sheetBounds, adjustments = {}, isMobile, canvasHeight) {
   ctx.strokeStyle = "#7b1fa2"; // Professional purple
   ctx.lineWidth = getResponsiveLineWidth(2, isMobile);
   ctx.fillStyle = "#7b1fa2";
   ctx.font = isMobile ? "13px Arial" : "11px Arial"; // Conservative mobile increase
   ctx.textAlign = "center";
   
+  // Set up dotted line pattern
+  ctx.setLineDash([5, 5]); // 5px dash, 5px gap
+  
+  const rulerY = canvasHeight - 40; // Match ruler position
+  
   scorePositions.forEach(pos => {
     const x = pos * scale;
     
-    // Score line
+    // Dotted score line extending from above sheet down to ruler
     ctx.beginPath();
-    ctx.moveTo(x, sheetBounds.y - 10);
-    ctx.lineTo(x, sheetBounds.y + sheetBounds.height + 10);
+    ctx.moveTo(x, sheetBounds.y - 30);
+    ctx.lineTo(x, rulerY);
     ctx.stroke();
     
-    // Score position label
+    // Score position label above the line
     ctx.fillText(
       pos.toFixed(3) + '"', 
       x, 
-      sheetBounds.y - 15
+      sheetBounds.y - 35
     );
   });
+  
+  // Reset line dash for other drawings
+  ctx.setLineDash([]);
   
   // Show adjustment indicator if any adjustments are active
   if (adjustments.netAdjustment && adjustments.netAdjustment !== 0) {
@@ -177,32 +179,22 @@ function drawScoreLines(ctx, scorePositions, scale, sheetBounds, adjustments = {
     ctx.fillText(
       `Adjustment: ${adjustmentValue > 0 ? '+' : ''}${adjustmentValue}"`, 
       sheetBounds.width - 10, 
-      sheetBounds.y - 25
+      sheetBounds.y - 45
     );
   }
 }
 
 /**
- * Draw measurement labels and title
+ * Draw measurement labels
  */
 function drawLabels(ctx, pageLength, docLength, gutterSize, scale, isMobile) {
   ctx.fillStyle = "#333";
-  ctx.font = isMobile ? "18px Arial" : "16px Arial"; // Conservative title increase
+  ctx.font = isMobile ? "14px Arial" : "12px Arial";
   ctx.textAlign = "left";
   
-  // Title
-  ctx.fillText("Score Calculator - Print Production Layout", 10, 25);
-  
-  // Basic measurements
-  ctx.font = isMobile ? "14px Arial" : "12px Arial"; // Conservative measurement increase
-  ctx.fillText(`Document Length: ${docLength}"`, 10, 45);
-  ctx.fillText(`Gutter Size: ${gutterSize}"`, 10, 62);
-  
-  // Show gutter areas visually if gutter > 0
-  if (gutterSize > 0) {
-    ctx.fillStyle = "#ffecb3"; // Light amber for gutter areas
-    ctx.fillText(`(Gutter areas shown in light amber)`, 10, 79);
-  }
+  // Sheet and document measurements only
+  ctx.fillText(`Sheet Length: ${pageLength}"`, 10, 25);
+  ctx.fillText(`Document Length: ${docLength}"`, 10, 42);
 }
 
 /**
@@ -257,7 +249,7 @@ function drawVisualization(pageLength, docStarts, docLength, scorePositions, gut
   const sheetBounds = drawSheet(ctx, pageLength, scale, dimensions.height);
   drawGutters(ctx, docStarts, docLength, gutterSize, scale, sheetBounds); // Draw gutters first
   drawDocuments(ctx, docStarts, docLength, scale, sheetBounds, dimensions.isMobile);
-  drawScoreLines(ctx, scorePositions, scale, sheetBounds, adjustments, dimensions.isMobile);
+  drawScoreLines(ctx, scorePositions, scale, sheetBounds, adjustments, dimensions.isMobile, dimensions.height);
   drawRuler(ctx, pageLength, scale, dimensions.height, dimensions.isMobile);
   drawLabels(ctx, pageLength, docLength, gutterSize, scale, dimensions.isMobile);
   
