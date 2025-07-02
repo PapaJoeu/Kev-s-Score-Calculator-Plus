@@ -70,7 +70,7 @@ function runCalculator() {
 
   // display results and visualization
   displayResults(nUp, docStarts, scorePositions);
-  drawVisualization(pageLength, docStarts, docLength, scorePositions);
+  drawVisualization(pageLength, docStarts, docLength, scorePositions, gutterSize);
 }
 
 /**
@@ -106,7 +106,8 @@ function adjustScores(direction) {
   displayResults(window._lastNup, window._lastDocStarts, window.currentAdjustedScores);
   const pageLength = CONFIG.pageLength;
   const docLength = CONFIG.docLength;
-  drawVisualization(pageLength, window._lastDocStarts, docLength, window.currentAdjustedScores);
+  const gutterSize = CONFIG.gutterSize;
+  drawVisualization(pageLength, window._lastDocStarts, docLength, window.currentAdjustedScores, gutterSize);
 }
 
 /**

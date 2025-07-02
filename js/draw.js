@@ -164,7 +164,7 @@ function drawScoreLines(ctx, scorePositions, scale, sheetBounds) {
 /**
  * Draw measurement labels and title
  */
-function drawLabels(ctx, pageLength, docLength, scale) {
+function drawLabels(ctx, pageLength, docLength, gutterSize, scale) {
   ctx.fillStyle = "#333";
   ctx.font = "16px Arial";
   ctx.textAlign = "left";
@@ -175,6 +175,33 @@ function drawLabels(ctx, pageLength, docLength, scale) {
   // Basic measurements
   ctx.font = "12px Arial";
   ctx.fillText(`Document Length: ${docLength}"`, 10, 45);
+  ctx.fillText(`Gutter Size: ${gutterSize}"`, 10, 62);
+  
+  // Show gutter areas visually if gutter > 0
+  if (gutterSize > 0) {
+    ctx.fillStyle = "#ffecb3"; // Light amber for gutter areas
+    ctx.fillText(`(Gutter areas shown in light amber)`, 10, 79);
+  }
+}
+
+/**
+ * Draw gutter areas between documents
+ */
+function drawGutters(ctx, docStarts, docLength, gutterSize, scale, sheetBounds) {
+  if (gutterSize <= 0 || docStarts.length <= 1) return;
+  
+  ctx.fillStyle = "#ffecb3"; // Light amber for gutters
+  ctx.strokeStyle = "#ff8f00"; // Darker amber border
+  ctx.lineWidth = 1;
+  
+  // Draw gutter between each pair of documents
+  for (let i = 0; i < docStarts.length - 1; i++) {
+    const docEnd = (docStarts[i] + docLength) * scale;
+    const gutterWidth = gutterSize * scale;
+    
+    ctx.fillRect(docEnd, sheetBounds.y, gutterWidth, sheetBounds.height);
+    ctx.strokeRect(docEnd, sheetBounds.y, gutterWidth, sheetBounds.height);
+  }
 }
 
 // ===========================================
@@ -184,7 +211,7 @@ function drawLabels(ctx, pageLength, docLength, scale) {
 /**
  * Draw complete visualization with professional print production layout
  */
-function drawVisualization(pageLength, docStarts, docLength, scorePositions, adjustments = {}) {
+function drawVisualization(pageLength, docStarts, docLength, scorePositions, gutterSize = 0, adjustments = {}) {
   const canvas = document.getElementById("visualizer");
   if (!canvas) {
     console.error("Canvas element not found");
@@ -203,16 +230,17 @@ function drawVisualization(pageLength, docStarts, docLength, scorePositions, adj
   // Clear previous drawing
   ctx.clearRect(0, 0, dimensions.width, dimensions.height);
   
-  // Draw all components
+  // Draw all components in proper layering order
   ctx.save();
   
   const sheetBounds = drawSheet(ctx, pageLength, scale, dimensions.height);
+  drawGutters(ctx, docStarts, docLength, gutterSize, scale, sheetBounds); // Draw gutters first
   drawDocuments(ctx, docStarts, docLength, scale, sheetBounds);
   drawScoreLines(ctx, scorePositions, scale, sheetBounds);
   drawRuler(ctx, pageLength, scale, dimensions.height);
-  drawLabels(ctx, pageLength, docLength, scale);
+  drawLabels(ctx, pageLength, docLength, gutterSize, scale);
   
   ctx.restore();
   
-  console.log("Professional visualization rendered");
+  console.log("Professional visualization rendered with gutters");
 }
