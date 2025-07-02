@@ -129,7 +129,35 @@ Based on mobile screenshot feedback, the current visualizer has critical issues:
 - [ ] After Step 3: Space optimization complete
 - [ ] Final: Visualizer scaling enhancement complete
 
+## ✅ COMPLETED IMPROVEMENTS (July 2, 2025)
+
+### Canvas Height & Text Optimization:
+- ✅ Increased mobile canvas height from 50vh to 65vh (major space improvement)
+- ✅ Raised minimum canvas height from 300px to 400px
+- ✅ Fixed font scaling with conservative 1.4x mobile multiplier (avoided layout breaking)
+- ✅ All visualizer text now clearly readable on mobile devices
+
+### Visualizer Content Cleanup:
+- ✅ Removed useless "Score Calculator - Print Production" title
+- ✅ Added Sheet Length info above Document Length (more useful info)
+- ✅ Removed Gutter Size display and yellow color notes (reduced clutter)
+- ✅ Removed "Sheet:" label from above visualizer (cleaner appearance)
+
+### Visual Layout Improvements:
+- ✅ Made purple score lines dotted/dashed for better visual distinction
+- ✅ Extended purple lines down to ruler for clear measurement reference
+- ✅ Moved document numbers (Doc 1, Doc 2, etc.) above document areas
+- ✅ Positioned score measurements above purple lines (better hierarchy)
+
+### Space Optimization:
+- ✅ Reduced canvas margins from 16px to 8px on mobile
+- ✅ Hidden results tables on mobile (visualizer-first approach)
+- ✅ Compact adjustment controls with tighter spacing
+
+**Result**: Visualizer now dominates mobile screen with 65% height, clean content, and professional layout.
+
 ---
+
 **Context**: This task is part of the broader Mobile Visualizer Enhancement Project (Phase 2+)
 **Goal**: Transform mobile experience from cramped/unreadable to engaging/professional
 **Success**: User can clearly see and interact with visualizer as primary interface element
